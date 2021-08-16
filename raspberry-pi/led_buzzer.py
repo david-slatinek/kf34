@@ -3,11 +3,22 @@
 from sys import argv
 import getopt
 from gpiozero import LED, Buzzer
-from signal import pause
+from signal import pause, signal, SIGTERM, SIGINT
 
 led_pin, buzzer_pin = 18, 27
 led = LED(led_pin)
 buzzer = Buzzer(buzzer_pin)
+
+
+def handler(signal_received=None, frame=None):
+    led.off()
+    buzzer.off()
+    write_status("OFF\n")
+
+
+def write_status(status:str):
+    with open("status.txt", "w") as f:
+        f.write(status)
 
 
 def usage():
@@ -21,15 +32,13 @@ def usage():
     print("\tEnable LED and buzzer")
     print("-d, --disable")
     print("\tDisable LED and buzzer")
-    print("-s, --status")
-    print("\tView LED and buzzer status")
     print("-L <number>, --led <number>")
     print("\tDefine LED pin number. Default is 18")
     print("-b <number>, --buzzer <number>")
     print("\tDefine buzzer pin number. Default is 27")
 
     print("Usage")
-    print("\t./led.py hedsL:b:")
+    print("\t./led.py hedL:b:")
 
 
 def validate_pin(flag: str, value: str) -> int:
@@ -47,11 +56,14 @@ def validate_pin(flag: str, value: str) -> int:
 
 
 if __name__ == "__main__":
+    signal(SIGTERM, handler)
+    signal(SIGINT, handler)
+
     opts = []
     e_flag, d_flag = False, False
 
     try:
-        opts, _ = getopt.getopt(argv[1:], "hedsL:b:", ["help", "enable", "disable", "status", "led=", "buzzer="])
+        opts, _ = getopt.getopt(argv[1:], "hedL:b:", ["help", "enable", "disable", "led=", "buzzer="])
     except getopt.GetoptError:
         usage()
         exit(1)
@@ -65,10 +77,6 @@ if __name__ == "__main__":
                 e_flag = True
             elif opt in ("-d", "--disable"):
                 d_flag = True
-            elif opt in ("-s", "--status"):
-                print("LED status: " + ("ON" if led.is_lit else "OFF"))
-                print("Buzzer status: " + ("ON" if buzzer.is_active else "OFF"))
-                exit(0)
             elif opt in ("-L", "--led"):
                 led_pin = validate_pin("-L", arg)
             elif opt in ("-b", "--buzzer"):
@@ -92,7 +100,7 @@ if __name__ == "__main__":
     if e_flag:
         led.on()
         buzzer.on()
+        write_status("ON\n")
         pause()
     elif d_flag:
-        led.off()
-        buzzer.off()
+        handler()
