@@ -16,7 +16,7 @@ def handler(signal_received=None, frame=None):
     write_status("OFF\n")
 
 
-def write_status(status:str):
+def write_status(status: str):
     with open("status.txt", "w") as f:
         f.write(status)
 
