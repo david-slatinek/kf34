@@ -1,0 +1,25 @@
+schema {
+    query: Query
+}
+
+type Device {
+    id_device: ID!
+    device_type: String!
+}
+
+type Data {
+    id_data: ID!
+    capture: String!
+    value: Float!
+    fk_device: Device!
+}
+
+type DataResult {
+    success: Boolean!
+    errors: [String]
+    data: Data!
+}
+
+type Query {
+    getByType(device_type: String!): [DataResult!]!
+}
