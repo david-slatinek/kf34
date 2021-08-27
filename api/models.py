@@ -16,8 +16,8 @@ class Device(db.Model):
 
     def to_dict(self):
         return {
-            "id": self.id_device,
-            "type": self.device_type
+            "id_device": self.id_device,
+            "device_type": self.device_type
         }
 
 

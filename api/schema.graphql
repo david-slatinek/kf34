@@ -11,15 +11,15 @@ type Data {
     id_data: ID!
     capture: String!
     value: Float!
-    fk_device: Device!
+    fk_device: Int!
 }
 
 type DataResult {
     success: Boolean!
     errors: [String]
-    data: Data!
+    data: [Data!]
 }
 
 type Query {
-    getByType(device_type: String!): [DataResult!]!
+    getByType(device_type: String!): DataResult!
 }
