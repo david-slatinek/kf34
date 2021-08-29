@@ -2,22 +2,30 @@ from __init__ import app
 from os import environ
 from ariadne import load_schema_from_path, make_executable_schema, graphql_sync, snake_case_fallback_resolvers, \
     ObjectType
-from ariadne.constants import PLAYGROUND_HTML
 from flask import request, jsonify
-from queries import resolve_getByType
+from queries import resolve_get_by_type
+from mutations import resolve_add_data
+
 
 query = ObjectType("Query")
-query.set_field("getByType", resolve_getByType)
+query.set_field("getByType", resolve_get_by_type)
+mutation = ObjectType("Mutation")
+mutation.set_field("addData", resolve_add_data)
 
 type_defs = load_schema_from_path("schema.graphql")
 schema = make_executable_schema(
-    type_defs, query, snake_case_fallback_resolvers
+    type_defs, query, mutation, snake_case_fallback_resolvers
 )
 
 
-@app.route("/graphql", methods=["GET"])
-def graphql_playground():
-    return PLAYGROUND_HTML, 200
+@app.errorhandler(404)
+def page_not_found(e=None):
+    return jsonify({'error': 'not found'}), 404
+
+
+@app.route("/", methods=["GET"])
+def main():
+    return page_not_found()
 
 
 @app.route("/graphql", methods=["POST"])

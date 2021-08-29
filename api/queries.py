@@ -1,7 +1,7 @@
 from models import Data, Device
 
 
-def resolve_getByType(obj, info, device_type):
+def resolve_get_by_type(obj, info, device_type):
     try:
         device = [device.to_dict() for device in Device.query.filter_by(device_type=device_type)]
 
@@ -13,6 +13,6 @@ def resolve_getByType(obj, info, device_type):
     except Exception as error:
         payload = {
             "success": False,
-            "errors": [str(error)]
+            "error": str(error)
         }
     return payload

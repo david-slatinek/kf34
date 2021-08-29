@@ -1,5 +1,11 @@
 schema {
     query: Query
+    mutation: Mutation
+}
+
+interface ReturnFields {
+    success: Boolean!
+    error: String
 }
 
 type Device {
@@ -14,12 +20,21 @@ type Data {
     fk_device: Int!
 }
 
-type DataResult {
+type DataResult implements ReturnFields {
     success: Boolean!
-    errors: [String]
+    error: String
     data: [Data!]
+}
+
+type InsertResult implements ReturnFields {
+    success: Boolean!
+    error: String
 }
 
 type Query {
     getByType(device_type: String!): DataResult!
+}
+
+type Mutation {
+    addData(value: Float!, device_type: String!): InsertResult!
 }

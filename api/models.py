@@ -41,5 +41,5 @@ class Data(db.Model):
             "id": self.id_data,
             "capture": self.capture,
             "value": self.value,
-            "fk": self.fk_device
+            "fk_device": self.fk_device
         }

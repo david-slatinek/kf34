@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from subprocess import run
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 raw_db_url = run(
     ["heroku", "config:get", "DATABASE_URL", "-a", "kf34"],
@@ -12,3 +14,6 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
+
+engine = create_engine(app.config["SQLALCHEMY_DATABASE_URI"])
+Session = sessionmaker(engine)
