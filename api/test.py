@@ -1,5 +1,5 @@
 from models import Data, db, Device
-# from queries import resolve_get_by_type
+from queries import resolve_get_by_type, resolve_get_max
 from mutations import resolve_add_data
 
 if __name__ == "__main__":
@@ -24,7 +24,9 @@ if __name__ == "__main__":
     # ).join(Device).all()
     # print(q[0])
 
-    resolve_add_data(None, None, -2, "temperature")
+    # resolve_add_data(None, None, -2, "temperature")
+
+    resolve_get_abs_max(None, None)
 
     # new_device = Device("new device")
     # db.session.add(new_device)

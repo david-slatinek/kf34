@@ -5,7 +5,7 @@ def resolve_add_data(obj, info, value, device_type):
     try:
         with Session() as session:
             result = session.execute("SELECT add_new_data(:value, :device_type)",
-                                     {'value': value, 'device_type': device_type})
+                                     {'value': value, 'device_type': device_type.lower()})
             session.commit()
             payload = {
                 "success": result.first()[0]

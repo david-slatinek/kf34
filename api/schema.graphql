@@ -31,10 +31,28 @@ type InsertResult implements ReturnFields {
     error: String
 }
 
+enum DeviceType {
+    TEMPERATURE,
+    HUMIDITY
+}
+
+type MaxMin {
+    capture: String!
+    value: Float!
+    device_type: String!
+}
+
+type MaxMinResult implements ReturnFields {
+    success: Boolean!
+    error: String
+    data: [MaxMin!]
+}
+
 type Query {
-    getByType(device_type: String!): DataResult!
+    getByType(device_type: DeviceType!): DataResult!
+    getMax: MaxMinResult!
 }
 
 type Mutation {
-    addData(value: Float!, device_type: String!): InsertResult!
+    addData(value: Float!, device_type: DeviceType!): InsertResult!
 }
