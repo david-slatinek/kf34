@@ -1,5 +1,5 @@
 from models import Data, db, Device
-from queries import resolve_get_by_type, resolve_get_max, resolve_get_today
+from queries import resolve_get_max, resolve_get_today
 from mutations import resolve_add_data
 from datetime import date
 
@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
     # data = Data(55.4, -1)
 
-    print(resolve_get_today(None, None, "TEMPERATURE"))
+    print(resolve_get_max(None, None, "TEMPERATURE"))
 
     # new_device = Device("new device")
     # db.session.add(new_device)

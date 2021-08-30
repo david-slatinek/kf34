@@ -8,12 +8,13 @@ interface ReturnFields {
     error: String
 }
 
-type Device {
-    id_device: ID!
-    device_type: String!
+interface DataInterface {
+    id_data: ID!
+    capture: String!
+    value: Float!
 }
 
-type Data {
+type Data implements DataInterface {
     id_data: ID!
     capture: String!
     value: Float!
@@ -36,25 +37,25 @@ enum DeviceType {
     HUMIDITY
 }
 
-type MaxMin {
-    id_data: ID!
-    capture: String!
-    value: Float!
-    device_type: String!
-}
+#type MaxMin {
+#    id_data: ID!
+#    capture: String!
+#    value: Float!
+#    device_type: String!
+#}
 
-type MaxMinResult implements ReturnFields {
-    success: Boolean!
-    error: String
-    data: [MaxMin!]
-}
+#type MaxMinResult implements ReturnFields {
+#    success: Boolean!
+#    error: String
+#    data: [MaxMin!]
+#}
 
 type Query {
-    getByType(device_type: DeviceType!): DataResult!
-    getMax: MaxMinResult!
-    getMin: MaxMinResult!
-    getToday(device: DeviceType!): MaxMinResult!
-    getLatest(device_type: DeviceType!): MaxMinResult!
+    getAll(device_type: DeviceType!): DataResult!
+    getMax(device_type: DeviceType!): DataResult!
+    getMin(device_type: DeviceType!): DataResult!
+    getToday(device_type: DeviceType!): DataResult!
+    getLatest(device_type: DeviceType!): DataResult!
 }
 
 type Mutation {

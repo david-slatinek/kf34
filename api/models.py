@@ -34,7 +34,7 @@ class Data(db.Model):
         self.fk_device = fk_device
 
     def __str__(self):
-        return f"id: {self.id_data}, capture: {self.capture}, value: {self.value}, fk: {self.fk_device}"
+        return f"id_data: {self.id_data}, capture: {self.capture}, value: {self.value}, fk_device: {self.fk_device}"
 
     def add_data(self, id_data, capture):
         self.id_data = id_data
@@ -42,7 +42,7 @@ class Data(db.Model):
 
     def to_dict(self):
         return {
-            "id": self.id_data,
+            "id_data": self.id_data,
             "capture": self.capture,
             "value": self.value,
             "fk_device": self.fk_device
