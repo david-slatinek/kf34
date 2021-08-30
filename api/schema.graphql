@@ -37,6 +37,7 @@ enum DeviceType {
 }
 
 type MaxMin {
+    id_data: ID!
     capture: String!
     value: Float!
     device_type: String!
@@ -52,7 +53,8 @@ type Query {
     getByType(device_type: DeviceType!): DataResult!
     getMax: MaxMinResult!
     getMin: MaxMinResult!
-    getToday(device_type: DeviceType!): DataResult!
+    getToday(device: DeviceType!): MaxMinResult!
+    getLatest(device_type: DeviceType!): MaxMinResult!
 }
 
 type Mutation {
