@@ -3,7 +3,7 @@ from os import environ
 from ariadne import load_schema_from_path, make_executable_schema, graphql_sync, snake_case_fallback_resolvers, \
     ObjectType
 from flask import request, jsonify
-from queries import resolve_get_all, resolve_get_max, resolve_get_min, resolve_get_today
+from queries import resolve_get_all, resolve_get_max, resolve_get_min, resolve_get_today, resolve_get_latest
 from mutations import resolve_add_data
 
 query = ObjectType("Query")
@@ -11,6 +11,7 @@ query.set_field("getAll", resolve_get_all)
 query.set_field("getMax", resolve_get_max)
 query.set_field("getMin", resolve_get_min)
 query.set_field("getToday", resolve_get_today)
+query.set_field("getLatest", resolve_get_latest)
 
 mutation = ObjectType("Mutation")
 mutation.set_field("addData", resolve_add_data)
@@ -33,6 +34,9 @@ def main():
 
 @app.route("/graphql", methods=["POST"])
 def graphql_server():
+    if request.headers.get('X-API-Key') != app.config["KEY"]:
+        return jsonify({'error': 'api key not given or invalid'}), 401
+
     data = request.get_json()
     success, result = graphql_sync(
         schema,

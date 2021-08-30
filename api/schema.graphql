@@ -37,19 +37,6 @@ enum DeviceType {
     HUMIDITY
 }
 
-#type MaxMin {
-#    id_data: ID!
-#    capture: String!
-#    value: Float!
-#    device_type: String!
-#}
-
-#type MaxMinResult implements ReturnFields {
-#    success: Boolean!
-#    error: String
-#    data: [MaxMin!]
-#}
-
 type Query {
     getAll(device_type: DeviceType!): DataResult!
     getMax(device_type: DeviceType!): DataResult!

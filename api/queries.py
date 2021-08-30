@@ -80,3 +80,14 @@ def resolve_get_today(obj, info, device_type):
             WHERE CAST(capture AS DATE) = :today
             AND device.device_type = :device_type;
             """, {'today': str(date.today()), 'device_type': device_type.lower()})
+
+
+def resolve_get_latest(obj, info, device_type):
+    return data_retrieve(obj, info, """
+            SELECT data.*
+            FROM data
+            JOIN device
+            ON data.fk_device = device.id_device
+            WHERE capture = (SELECT MAX(capture) FROM data)
+            AND device.device_type = :device_type;
+    """, {"device_type": device_type.lower()})

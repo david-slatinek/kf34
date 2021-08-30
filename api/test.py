@@ -1,5 +1,5 @@
 from models import Data, db, Device
-from queries import resolve_get_max, resolve_get_today
+from queries import resolve_get_max, resolve_get_today, resolve_get_latest
 from mutations import resolve_add_data
 from datetime import date
 
