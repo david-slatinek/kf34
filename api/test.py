@@ -1,6 +1,7 @@
 from models import Data, db, Device
 from queries import resolve_get_by_type, resolve_get_max
 from mutations import resolve_add_data
+from datetime import date
 
 if __name__ == "__main__":
     # new_data = Data(value=25.4, fk_device=1)
@@ -25,8 +26,12 @@ if __name__ == "__main__":
     # print(q[0])
 
     # resolve_add_data(None, None, -2, "temperature")
+    # print(str(date.today()))
 
-    print(resolve_get_max(None, None))
+    print(Data(55.4, -1).to_dict())
+    # data = Data(55.4, -1)
+
+    # print(resolve_get_max(None, None))
 
     # new_device = Device("new device")
     # db.session.add(new_device)

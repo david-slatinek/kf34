@@ -52,6 +52,7 @@ type Query {
     getByType(device_type: DeviceType!): DataResult!
     getMax: MaxMinResult!
     getMin: MaxMinResult!
+    getToday(device_type: DeviceType!): DataResult!
 }
 
 type Mutation {

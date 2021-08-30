@@ -1,5 +1,6 @@
 from models import Data, Device
 from __init__ import Session
+from datetime import date
 
 
 def resolve_get_by_type(obj, info, device_type):
@@ -68,3 +69,34 @@ def resolve_get_min(obj, info):
             WHERE data.value = t.min
             ORDER BY t.device_type;
             """)
+
+
+def resolve_get_today(obj, info, device_type):
+    try:
+        with Session() as session:
+            result = session.execute("""
+            SELECT data.id_data, data.capture, data.value
+            FROM data
+            JOIN device
+            ON data.fk_device = device.id_device
+            WHERE CAST(capture AS DATE) = :today
+            AND device.device_type = :device_type;
+            """, {'today': str(date.today()), 'device_type': device_type.lower()})
+            session.commit()
+
+            data = []
+            for r in result:
+                d = Data(r["value"], -1)
+                d.add_data(r["id_data"], r["capture"])
+                data.append(d.to_dict())
+
+            payload = {
+                "success": True,
+                "data": data
+            }
+    except Exception as error:
+        payload = {
+            "success": False,
+            "error": str(error)
+        }
+    return payload
