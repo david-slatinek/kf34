@@ -51,6 +51,7 @@ type MaxMinResult implements ReturnFields {
 type Query {
     getByType(device_type: DeviceType!): DataResult!
     getMax: MaxMinResult!
+    getMin: MaxMinResult!
 }
 
 type Mutation {

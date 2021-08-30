@@ -26,7 +26,7 @@ if __name__ == "__main__":
 
     # resolve_add_data(None, None, -2, "temperature")
 
-    resolve_get_abs_max(None, None)
+    print(resolve_get_max(None, None))
 
     # new_device = Device("new device")
     # db.session.add(new_device)

@@ -3,12 +3,13 @@ from os import environ
 from ariadne import load_schema_from_path, make_executable_schema, graphql_sync, snake_case_fallback_resolvers, \
     ObjectType
 from flask import request, jsonify
-from queries import resolve_get_by_type, resolve_get_max
+from queries import resolve_get_by_type, resolve_get_max, resolve_get_min
 from mutations import resolve_add_data
 
 query = ObjectType("Query")
 query.set_field("getByType", resolve_get_by_type)
 query.set_field("getMax", resolve_get_max)
+query.set_field("getMin", resolve_get_min)
 
 mutation = ObjectType("Mutation")
 mutation.set_field("addData", resolve_add_data)
