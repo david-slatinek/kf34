@@ -43,6 +43,7 @@ type Query {
     getMin(device_type: DeviceType!): DataResult!
     getToday(device_type: DeviceType!): DataResult!
     getLatest(device_type: DeviceType!): DataResult!
+    getBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): DataResult!
 }
 
 type Mutation {
