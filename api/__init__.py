@@ -17,5 +17,5 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["KEY"] = key
 db = SQLAlchemy(app)
 
-engine = create_engine(app.config["SQLALCHEMY_DATABASE_URI"])
+engine = create_engine(app.config["SQLALCHEMY_DATABASE_URI"], echo=True)
 Session = sessionmaker(engine)

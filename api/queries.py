@@ -24,7 +24,7 @@ def to_dict(r):
     return data.to_dict()
 
 
-def data_retrieve(obj, info, query, params=None):
+def data_retrieve(query, params=None):
     try:
         with Session() as session:
             result = session.execute(query, params)
@@ -42,7 +42,7 @@ def data_retrieve(obj, info, query, params=None):
 
 
 def resolve_get_max(obj, info, device_type):
-    return data_retrieve(obj, info, """
+    return data_retrieve("""
             SELECT data.*
             FROM data,
                 (SELECT MAX(data.value) AS max, device.device_type
@@ -57,7 +57,7 @@ def resolve_get_max(obj, info, device_type):
 
 
 def resolve_get_min(obj, info, device_type):
-    return data_retrieve(obj, info, """
+    return data_retrieve("""
              SELECT data.*
             FROM data,
                 (SELECT MIN(data.value) AS min, device.device_type
@@ -72,7 +72,7 @@ def resolve_get_min(obj, info, device_type):
 
 
 def resolve_get_today(obj, info, device_type):
-    return data_retrieve(obj, info, """
+    return data_retrieve("""
             SELECT data.*
             FROM data
             JOIN device
@@ -83,7 +83,7 @@ def resolve_get_today(obj, info, device_type):
 
 
 def resolve_get_latest(obj, info, device_type):
-    return data_retrieve(obj, info, """
+    return data_retrieve("""
             SELECT data.*
             FROM data
             JOIN device
@@ -93,17 +93,22 @@ def resolve_get_latest(obj, info, device_type):
     """, {"device_type": device_type.lower()})
 
 
-def resolve_get_between(obj, info, begin_date, end_date, device_type):
+def valid_date(date):
     try:
-        datetime.strptime(begin_date, '%Y-%m-%d')
-        datetime.strptime(end_date, '%Y-%m-%d')
-    except ValueError as error:
+        datetime.strptime(date, '%Y-%m-%d')
+        return True
+    except ValueError:
+        return False
+
+
+def resolve_get_between(obj, info, begin_date, end_date, device_type):
+    if not valid_date(begin_date) or not valid_date(end_date):
         return {
             "success": False,
-            "error": str(error) + "; should be YYYY-MM-DD"
+            "error": "invalid date format; should be YYYY-MM-DD"
         }
 
-    return data_retrieve(obj, info, """
+    return data_retrieve("""
         SELECT data.*
         FROM data
         JOIN device
@@ -111,3 +116,43 @@ def resolve_get_between(obj, info, begin_date, end_date, device_type):
         WHERE CAST(capture AS DATE) BETWEEN :begin_date AND :end_date
         AND device.device_type = device_type;
     """, {"begin_date": begin_date, "end_date": end_date, "device_type": device_type})
+
+
+def measures_data_retrieve(query, params):
+    try:
+        with Session() as session:
+            result = session.execute(query, params)
+            session.commit()
+
+            data = result.fetchone()[0]
+
+            if data is None:
+                raise Exception("No rows")
+
+            payload = {
+                "success": True,
+                "data": data
+            }
+    except Exception as error:
+        payload = {
+            "success": False,
+            "error": str(error)
+        }
+    return payload
+
+
+def resolve_get_average_between(obj, info, begin_date, end_date, device_type):
+    if not valid_date(begin_date) or not valid_date(end_date):
+        return {
+            "success": False,
+            "error": "invalid date format; should be YYYY-MM-DD"
+        }
+
+    return measures_data_retrieve("""
+        SELECT ROUND(AVG(data.value), 2) AS average
+        FROM data
+        JOIN device
+        ON data.fk_device = device.id_device
+        WHERE CAST(capture AS DATE) BETWEEN :begin_date AND :end_date
+        AND device.device_type = :device_type;
+    """, {"begin_date": begin_date, "end_date": end_date, "device_type": device_type.lower()})

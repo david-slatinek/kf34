@@ -27,6 +27,12 @@ type DataResult implements ReturnFields {
     data: [Data!]
 }
 
+type MeasuresResult implements ReturnFields {
+    success: Boolean!
+    error: String
+    data: Float
+}
+
 type InsertResult implements ReturnFields {
     success: Boolean!
     error: String
@@ -44,6 +50,10 @@ type Query {
     getToday(device_type: DeviceType!): DataResult!
     getLatest(device_type: DeviceType!): DataResult!
     getBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): DataResult!
+    getAverageBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): MeasuresResult!
+    # getAverageBetween =>  getTodayAverage
+    # getMaxBetween => getTodayMax
+    # getMinBetween => getTodayMin
 }
 
 type Mutation {
