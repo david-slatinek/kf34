@@ -51,9 +51,9 @@ type Query {
     getLatest(device_type: DeviceType!): DataResult!
     getBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): DataResult!
     getAverageBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): MeasuresResult!
-    # getAverageBetween =>  getTodayAverage
-    # getMaxBetween => getTodayMax
-    # getMinBetween => getTodayMin
+    getAverageToday(device_type: DeviceType!): MeasuresResult!
+    # getMaxBetween => getMaxToday
+    # getMinBetween => getMinToday
 }
 
 type Mutation {

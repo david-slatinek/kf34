@@ -4,7 +4,7 @@ from ariadne import load_schema_from_path, make_executable_schema, graphql_sync,
     ObjectType
 from flask import request, jsonify
 from queries import resolve_get_all, resolve_get_max, resolve_get_min, resolve_get_today, resolve_get_latest, \
-    resolve_get_between, resolve_get_average_between
+    resolve_get_between, resolve_get_average_between, resolve_get_average_today
 from mutations import resolve_add_data
 
 query = ObjectType("Query")
@@ -15,6 +15,7 @@ query.set_field("getToday", resolve_get_today)
 query.set_field("getLatest", resolve_get_latest)
 query.set_field("getBetween", resolve_get_between)
 query.set_field("getAverageBetween", resolve_get_average_between)
+query.set_field("getAverageToday", resolve_get_average_today)
 
 mutation = ObjectType("Mutation")
 mutation.set_field("addData", resolve_add_data)

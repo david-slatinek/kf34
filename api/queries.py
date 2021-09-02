@@ -156,3 +156,7 @@ def resolve_get_average_between(obj, info, begin_date, end_date, device_type):
         WHERE CAST(capture AS DATE) BETWEEN :begin_date AND :end_date
         AND device.device_type = :device_type;
     """, {"begin_date": begin_date, "end_date": end_date, "device_type": device_type.lower()})
+
+
+def resolve_get_average_today(obj, info, device_type):
+    return resolve_get_average_between(obj, info, str(date.today()), str(date.today()), device_type)
