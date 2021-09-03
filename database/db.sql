@@ -21,5 +21,5 @@ SET
 INSERT INTO
     device (device_type)
 VALUES
-    ('temperature'),
-    ('humidity');
+    ('TEMPERATURE'),
+    ('HUMIDITY');
