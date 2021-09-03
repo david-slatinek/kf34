@@ -50,7 +50,7 @@ def resolve_get_max(obj, info, device_type):
                 JOIN device
                 ON data.fk_device = device.id_device
                 WHERE device.device_type = :device_type
-                GROUP BY device.device_type) t
+                GROUP BY device.id_device) t
             WHERE data.value = t.max;
             """, {'device_type': device_type})
 
@@ -123,6 +123,9 @@ def measures_data_retrieve(query, params):
             result = session.execute(query, params)
             session.commit()
 
+            if result.rowcount == 0:
+                raise Exception("No rows")
+
             data = result.fetchone()[0]
 
             if data is None:
@@ -168,15 +171,16 @@ def resolve_get_max_between(obj, info, begin_date, end_date, device_type):
             "error": "invalid date format; should be YYYY-MM-DD"
         }
 
-    return data_retrieve("""
-        SELECT data.*
-        FROM data,
-            (SELECT MAX(data.value) AS max
-            FROM data
-            JOIN device
-            ON data.fk_device = device.id_device
-            WHERE device.device_type = :device_type
-            GROUP BY device.id_device) t
-        WHERE data.value = t.max
-        AND CAST(data.capture AS DATE) BETWEEN :begin_date AND :end_date;
+    return measures_data_retrieve("""
+        SELECT MAX(data.value) AS max
+        FROM data
+        JOIN device
+        ON data.fk_device = device.id_device
+        WHERE device.device_type = :device_type
+        AND CAST(data.capture AS DATE) BETWEEN :begin_date AND :end_date
+        GROUP BY device.id_device;
        """, {"begin_date": begin_date, "end_date": end_date, "device_type": device_type})
+
+
+def resolve_get_max_today(obj, info, device_type):
+    return resolve_get_max_between(obj, info, str(date.today()), str(date.today()), device_type)

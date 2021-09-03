@@ -52,8 +52,8 @@ type Query {
     getBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): DataResult!
     getAverageBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): MeasuresResult!
     getAverageToday(device_type: DeviceType!): MeasuresResult!
-    getMaxBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): DataResult!
-    # getMaxBetween => getMaxToday
+    getMaxBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): MeasuresResult!
+    getMaxToday(device_type: DeviceType!): MeasuresResult!
     # getMinBetween => getMinToday
 }
 
