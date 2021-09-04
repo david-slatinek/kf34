@@ -51,7 +51,8 @@ def resolve_get_max(obj, info, device_type):
                 ON data.fk_device = device.id_device
                 WHERE device.device_type = :device_type
                 GROUP BY device.id_device) t
-            WHERE data.value = t.max;
+            WHERE data.value = t.max
+            ORDER BY data.capture DESC;
             """, {'device_type': device_type})
 
 
@@ -59,12 +60,12 @@ def resolve_get_min(obj, info, device_type):
     return data_retrieve("""
             SELECT data.*
             FROM data,
-                (SELECT MIN(data.value) AS min, device.device_type
+                (SELECT MIN(data.value) AS min
                 FROM data
                 JOIN device
                 ON data.fk_device = device.id_device
                 WHERE device.device_type = :device_type
-                GROUP BY device.device_type) t
+                GROUP BY device.id_device) t
             WHERE data.value = t.min
             ORDER BY data.capture DESC;
             """, {'device_type': device_type})
@@ -184,3 +185,21 @@ def resolve_get_max_between(obj, info, begin_date, end_date, device_type):
 
 def resolve_get_max_today(obj, info, device_type):
     return resolve_get_max_between(obj, info, str(date.today()), str(date.today()), device_type)
+
+
+def resolve_get_min_between(obj, info, begin_date, end_date, device_type):
+    if not valid_date(begin_date) or not valid_date(end_date):
+        return {
+            "success": False,
+            "error": "invalid date format; should be YYYY-MM-DD"
+        }
+
+    return measures_data_retrieve("""
+            SELECT MIN(data.value) AS min
+            FROM data
+            JOIN device
+            ON data.fk_device = device.id_device
+            WHERE device.device_type = :device_type
+            AND CAST(data.capture AS DATE) BETWEEN :begin_date AND :end_date
+            GROUP BY device.id_device;
+           """, {"begin_date": begin_date, "end_date": end_date, "device_type": device_type})
