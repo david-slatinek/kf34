@@ -55,7 +55,7 @@ type Query {
     getMaxBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): MeasuresResult!
     getMaxToday(device_type: DeviceType!): MeasuresResult!
     getMinBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): MeasuresResult!
-    # getMinBetween => getMinToday
+    getMinToday(device_type: DeviceType!): MeasuresResult!
 }
 
 type Mutation {

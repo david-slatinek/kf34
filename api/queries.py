@@ -203,3 +203,7 @@ def resolve_get_min_between(obj, info, begin_date, end_date, device_type):
             AND CAST(data.capture AS DATE) BETWEEN :begin_date AND :end_date
             GROUP BY device.id_device;
            """, {"begin_date": begin_date, "end_date": end_date, "device_type": device_type})
+
+
+def resolve_get_min_today(obj, info, device_type):
+    return resolve_get_min_between(obj, info, str(date.today()), str(date.today()), device_type)
