@@ -26,23 +26,10 @@ def data_retrieve(query, params=None):
     return payload
 
 
-def resolve_get_max(obj, info, device_type):
+def central_value_result(query, params=None):
     try:
         with Session() as session:
-            result = session.execute("""
-                SELECT data.*
-                FROM data
-                JOIN device
-                ON data.fk_device = device.id_device
-                WHERE device.device_type = :device_type
-                AND data.value = (SELECT MAX(data.value) AS max
-                                FROM data
-                                JOIN device
-                                ON data.fk_device = device.id_device
-                                WHERE device.device_type = :device_type
-                                GROUP BY device.id_device)
-                ORDER BY data.capture DESC;
-            """"", {'device_type': device_type})
+            result = session.execute(query, params)
             session.commit()
 
             if result.rowcount == 0:
@@ -68,33 +55,39 @@ def resolve_get_max(obj, info, device_type):
         }
     return payload
 
-    # return data_retrieve("""
-    #         SELECT data.*
-    #         FROM data,
-    #             (SELECT MAX(data.value) AS max
-    #             FROM data
-    #             JOIN device
-    #             ON data.fk_device = device.id_device
-    #             WHERE device.device_type = :device_type
-    #             GROUP BY device.id_device) t
-    #         WHERE data.value = t.max
-    #         ORDER BY data.capture DESC;
-    #         """, {'device_type': device_type})
 
-
-def resolve_get_min(obj, info, device_type):
-    return data_retrieve("""
-            SELECT data.*
-            FROM data,
-                (SELECT MIN(data.value) AS min
+def resolve_get_max(obj, info, device_type):
+    return central_value_result("""
+                SELECT data.*
                 FROM data
                 JOIN device
                 ON data.fk_device = device.id_device
                 WHERE device.device_type = :device_type
-                GROUP BY device.id_device) t
-            WHERE data.value = t.min
-            ORDER BY data.capture DESC;
-            """, {'device_type': device_type})
+                AND data.value = (SELECT MAX(data.value)
+                                FROM data
+                                JOIN device
+                                ON data.fk_device = device.id_device
+                                WHERE device.device_type = :device_type
+                                GROUP BY device.id_device)
+                ORDER BY data.capture DESC;
+            """"", {'device_type': device_type})
+
+
+def resolve_get_min(obj, info, device_type):
+    return central_value_result("""
+                SELECT data.*
+                FROM data
+                JOIN device
+                ON data.fk_device = device.id_device
+                WHERE device.device_type = :device_type
+                AND data.value = (SELECT MIN(data.value)
+                                FROM data
+                                JOIN device
+                                ON data.fk_device = device.id_device
+                                WHERE device.device_type = :device_type
+                                GROUP BY device.id_device)
+                ORDER BY data.capture DESC;
+            """"", {'device_type': device_type})
 
 
 def resolve_get_today(obj, info, device_type):

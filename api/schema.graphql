@@ -46,14 +46,20 @@ enum DeviceType {
 
 type Query {
     getMax(device_type: DeviceType!): CentralValueResult!
-    getMin(device_type: DeviceType!): DataResult!
+    getMin(device_type: DeviceType!): CentralValueResult!
+    getAverage(device_type: DeviceType!): CentralValueResult!
+
     getToday(device_type: DeviceType!): DataResult!
     getLatest(device_type: DeviceType!): DataResult!
+
     getBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): DataResult!
+
     getAverageBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): MeasuresResult!
     getAverageToday(device_type: DeviceType!): MeasuresResult!
+
     getMaxBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): MeasuresResult!
     getMaxToday(device_type: DeviceType!): MeasuresResult!
+
     getMinBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): MeasuresResult!
     getMinToday(device_type: DeviceType!): MeasuresResult!
 }
