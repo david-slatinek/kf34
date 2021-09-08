@@ -21,13 +21,13 @@ type DataResult implements ReturnFields {
     data: [Data!]
 }
 
-type MeasuresResult implements ReturnFields {
+type AvgResult implements ReturnFields {
     success: Boolean!
     error: String
     data: Float
 }
 
-type CentralValueResult implements ReturnFields {
+type MaxMinResult implements ReturnFields {
     success: Boolean!
     error: String
     data: Float
@@ -45,23 +45,23 @@ enum DeviceType {
 }
 
 type Query {
-    getMax(device_type: DeviceType!): CentralValueResult!
-    getMin(device_type: DeviceType!): CentralValueResult!
-    getAverage(device_type: DeviceType!): MeasuresResult!
+    getMax(device_type: DeviceType!): MaxMinResult!
+    getMin(device_type: DeviceType!): MaxMinResult!
+    getAverage(device_type: DeviceType!): AvgResult!
 
     getToday(device_type: DeviceType!): DataResult!
     getLatest(device_type: DeviceType!): DataResult!
 
     getBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): DataResult!
 
-    getAverageBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): MeasuresResult!
-    getAverageToday(device_type: DeviceType!): MeasuresResult!
+    getAverageBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): AvgResult!
+    getAverageToday(device_type: DeviceType!): AvgResult!
 
-    getMaxBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): CentralValueResult!
-    getMaxToday(device_type: DeviceType!): CentralValueResult!
+    getMaxBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): MaxMinResult!
+    getMaxToday(device_type: DeviceType!): MaxMinResult!
 
-    getMinBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): CentralValueResult!
-    getMinToday(device_type: DeviceType!): CentralValueResult!
+    getMinBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): MaxMinResult!
+    getMinToday(device_type: DeviceType!): MaxMinResult!
 }
 
 type Mutation {

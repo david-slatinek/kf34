@@ -1,4 +1,4 @@
-from models import Data, Device
+from models import Data
 from __init__ import Session
 from datetime import date, datetime
 
@@ -45,7 +45,7 @@ def central_value_result(query, params):
 
             payload = {
                 "success": True,
-                "value": first_record["value"],
+                "data": first_record["value"],
                 "captured": captured
             }
     except Exception as error:
@@ -90,9 +90,35 @@ def resolve_get_min(obj, info, device_type):
             """"", {'device_type': device_type})
 
 
+def average_data_retrieve(query, params):
+    try:
+        with Session() as session:
+            result = session.execute(query, params)
+            session.commit()
+
+            if result.rowcount == 0:
+                raise Exception("No rows")
+
+            data = result.fetchone()[0]
+
+            if data is None:
+                raise Exception("No rows")
+
+            payload = {
+                "success": True,
+                "data": data
+            }
+    except Exception as error:
+        payload = {
+            "success": False,
+            "error": str(error)
+        }
+    return payload
+
+
 def resolve_get_average(obj, info, device_type):
-    return measures_data_retrieve("""
-            SELECT ROUND(AVG(data.value), 2) AS average
+    return average_data_retrieve("""
+            SELECT ROUND(AVG(data.value), 2)
             FROM data
             JOIN device
             ON data.fk_device = device.id_device
@@ -150,32 +176,6 @@ def resolve_get_between(obj, info, begin_date, end_date, device_type):
         """, {"begin_date": begin_date, "end_date": end_date, "device_type": device_type})
 
 
-def measures_data_retrieve(query, params):
-    try:
-        with Session() as session:
-            result = session.execute(query, params)
-            session.commit()
-
-            if result.rowcount == 0:
-                raise Exception("No rows")
-
-            data = result.fetchone()[0]
-
-            if data is None:
-                raise Exception("No rows")
-
-            payload = {
-                "success": True,
-                "data": data
-            }
-    except Exception as error:
-        payload = {
-            "success": False,
-            "error": str(error)
-        }
-    return payload
-
-
 def resolve_get_average_between(obj, info, begin_date, end_date, device_type):
     if not valid_date(begin_date) or not valid_date(end_date):
         return {
@@ -183,7 +183,7 @@ def resolve_get_average_between(obj, info, begin_date, end_date, device_type):
             "error": "invalid date format; should be YYYY-MM-DD"
         }
 
-    return measures_data_retrieve("""
+    return average_data_retrieve("""
             SELECT ROUND(AVG(data.value), 2)
             FROM data
             JOIN device
@@ -215,8 +215,8 @@ def resolve_get_max_between(obj, info, begin_date, end_date, device_type):
                                 JOIN device
                                 ON data.fk_device = device.id_device
                                 WHERE device.device_type = :device_type
+                                AND CAST(data.capture AS DATE) BETWEEN :begin_date AND :end_date
                                 GROUP BY device.id_device)
-            AND CAST(data.capture AS DATE) BETWEEN :begin_date AND :end_date
             ORDER BY data.capture DESC;
        """, {"begin_date": begin_date, "end_date": end_date, "device_type": device_type})
 
@@ -243,8 +243,8 @@ def resolve_get_min_between(obj, info, begin_date, end_date, device_type):
                                 JOIN device
                                 ON data.fk_device = device.id_device
                                 WHERE device.device_type = :device_type
+                                AND CAST(data.capture AS DATE) BETWEEN :begin_date AND :end_date
                                 GROUP BY device.id_device)
-            AND CAST(data.capture AS DATE) BETWEEN :begin_date AND :end_date
             ORDER BY data.capture DESC;
        """, {"begin_date": begin_date, "end_date": end_date, "device_type": device_type})
 
