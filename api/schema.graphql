@@ -30,7 +30,7 @@ type MeasuresResult implements ReturnFields {
 type CentralValueResult implements ReturnFields {
     success: Boolean!
     error: String
-    data: Float
+    value: Float
     captured: [String!]
 }
 
@@ -45,7 +45,7 @@ enum DeviceType {
 }
 
 type Query {
-    getMax(device_type: DeviceType!): DataResult!
+    getMax(device_type: DeviceType!): CentralValueResult!
     getMin(device_type: DeviceType!): DataResult!
     getToday(device_type: DeviceType!): DataResult!
     getLatest(device_type: DeviceType!): DataResult!

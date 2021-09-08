@@ -27,18 +27,59 @@ def data_retrieve(query, params=None):
 
 
 def resolve_get_max(obj, info, device_type):
-    return data_retrieve("""
-            SELECT data.*
-            FROM data,
-                (SELECT MAX(data.value) AS max
+    try:
+        with Session() as session:
+            result = session.execute("""
+                SELECT data.*
                 FROM data
                 JOIN device
                 ON data.fk_device = device.id_device
                 WHERE device.device_type = :device_type
-                GROUP BY device.id_device) t
-            WHERE data.value = t.max
-            ORDER BY data.capture DESC;
-            """, {'device_type': device_type})
+                AND data.value = (SELECT MAX(data.value) AS max
+                                FROM data
+                                JOIN device
+                                ON data.fk_device = device.id_device
+                                WHERE device.device_type = :device_type
+                                GROUP BY device.id_device)
+                ORDER BY data.capture DESC;
+            """"", {'device_type': device_type})
+            session.commit()
+
+            if result.rowcount == 0:
+                raise Exception("No rows")
+
+            first_record = result.fetchone()
+
+            if first_record is None:
+                raise Exception("No rows")
+
+            captured = [r["capture"] for r in result]
+            captured.insert(0, first_record["capture"])
+
+            payload = {
+                "success": True,
+                "value": first_record["value"],
+                "captured": captured
+            }
+    except Exception as error:
+        payload = {
+            "success": False,
+            "error": str(error)
+        }
+    return payload
+
+    # return data_retrieve("""
+    #         SELECT data.*
+    #         FROM data,
+    #             (SELECT MAX(data.value) AS max
+    #             FROM data
+    #             JOIN device
+    #             ON data.fk_device = device.id_device
+    #             WHERE device.device_type = :device_type
+    #             GROUP BY device.id_device) t
+    #         WHERE data.value = t.max
+    #         ORDER BY data.capture DESC;
+    #         """, {'device_type': device_type})
 
 
 def resolve_get_min(obj, info, device_type):
@@ -78,9 +119,9 @@ def resolve_get_latest(obj, info, device_type):
     """, {"device_type": device_type})
 
 
-def valid_date(date):
+def valid_date(input_date):
     try:
-        datetime.strptime(date, '%Y-%m-%d')
+        datetime.strptime(input_date, '%Y-%m-%d')
         return True
     except ValueError:
         return False
