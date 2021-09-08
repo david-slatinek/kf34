@@ -3,13 +3,12 @@ from os import environ
 from ariadne import load_schema_from_path, make_executable_schema, graphql_sync, snake_case_fallback_resolvers, \
     ObjectType
 from flask import request, jsonify
-from queries import resolve_get_all, resolve_get_max, resolve_get_min, resolve_get_today, resolve_get_latest, \
+from queries import resolve_get_max, resolve_get_min, resolve_get_today, resolve_get_latest, \
     resolve_get_between, resolve_get_average_between, resolve_get_average_today, resolve_get_max_between, \
     resolve_get_max_today, resolve_get_min_between, resolve_get_min_today
 from mutations import resolve_add_data
 
 query = ObjectType("Query")
-query.set_field("getAll", resolve_get_all)
 query.set_field("getMax", resolve_get_max)
 query.set_field("getMin", resolve_get_min)
 query.set_field("getToday", resolve_get_today)

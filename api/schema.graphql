@@ -8,13 +8,7 @@ interface ReturnFields {
     error: String
 }
 
-interface DataInterface {
-    id_data: ID!
-    capture: String!
-    value: Float!
-}
-
-type Data implements DataInterface {
+type Data {
     id_data: ID!
     capture: String!
     value: Float!
@@ -33,6 +27,13 @@ type MeasuresResult implements ReturnFields {
     data: Float
 }
 
+type CentralValueResult implements ReturnFields {
+    success: Boolean!
+    error: String
+    data: Float
+    captured: [String!]
+}
+
 type InsertResult implements ReturnFields {
     success: Boolean!
     error: String
@@ -44,7 +45,6 @@ enum DeviceType {
 }
 
 type Query {
-    getAll(device_type: DeviceType!): DataResult!
     getMax(device_type: DeviceType!): DataResult!
     getMin(device_type: DeviceType!): DataResult!
     getToday(device_type: DeviceType!): DataResult!

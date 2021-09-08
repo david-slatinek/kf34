@@ -3,21 +3,6 @@ from __init__ import Session
 from datetime import date, datetime
 
 
-def resolve_get_all(obj, info, device_type):
-    try:
-        device = [device.to_dict() for device in Device.query.filter_by(device_type=device_type)]
-        payload = {
-            "success": True,
-            "data": [data.to_dict() for data in Data.query.filter_by(fk_device=device[0]["id_device"]).all()]
-        }
-    except Exception as error:
-        payload = {
-            "success": False,
-            "error": str(error)
-        }
-    return payload
-
-
 def to_dict(r):
     data = Data(r["value"], r["fk_device"])
     data.add_data(r["id_data"], r["capture"])
