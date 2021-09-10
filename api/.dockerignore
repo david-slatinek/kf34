@@ -1,0 +1,6 @@
+.dockerignore
+.env
+.idea
+__pycache__
+venv
+upload.sh

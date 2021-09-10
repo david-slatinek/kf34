@@ -2,3 +2,4 @@ api/__pycache__
 api/.idea
 api/config.py
 api/.env
+api/venv

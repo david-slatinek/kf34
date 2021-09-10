@@ -1,6 +1,5 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from subprocess import run
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from os import environ
@@ -8,12 +7,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-raw_db_url = run(["heroku", "config:get", "DATABASE_URL", "-a", "kf34"], capture_output=True).stdout
-db_url = raw_db_url.decode("ascii").strip()
-db_url = "postgresql:" + db_url.split(":", 1)[1]
-
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = db_url
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:" + environ.get("DATABASE_URL").split(":", 1)[1]
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["KEY"] = environ.get("KEY")
 db = SQLAlchemy(app)
