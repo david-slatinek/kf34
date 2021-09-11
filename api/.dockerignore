@@ -1,6 +1,8 @@
+Dockerfile
 .dockerignore
 .env
+.gitignore
 .idea
 __pycache__
-venv
 upload.sh
+venv
