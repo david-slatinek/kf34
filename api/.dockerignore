@@ -1,6 +1,7 @@
 Dockerfile
 .dockerignore
 .env
+.env.example
 .gitignore
 .idea
 __pycache__
