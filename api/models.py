@@ -1,4 +1,5 @@
 from sqlalchemy import func
+
 from __init__ import db
 
 

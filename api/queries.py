@@ -1,6 +1,7 @@
-from models import Data
-from __init__ import Session
 from datetime import date, datetime
+
+from __init__ import Session
+from models import Data
 
 
 def to_dict(r):

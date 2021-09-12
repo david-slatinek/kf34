@@ -1,12 +1,17 @@
-from __init__ import app
 from os import environ
-from ariadne import load_schema_from_path, make_executable_schema, graphql_sync, snake_case_fallback_resolvers, \
-    ObjectType
-from flask import request, jsonify
-from queries import resolve_get_max, resolve_get_min, resolve_get_average, resolve_get_today, resolve_get_latest, \
-    resolve_get_between, resolve_get_average_between, resolve_get_average_today, resolve_get_max_between, \
-    resolve_get_max_today, resolve_get_min_between, resolve_get_min_today
+
+from ariadne import (ObjectType, graphql_sync, load_schema_from_path,
+                     make_executable_schema, snake_case_fallback_resolvers)
+from flask import jsonify, request
+
+from __init__ import app
 from mutations import resolve_add_data
+from queries import (resolve_get_average, resolve_get_average_between,
+                     resolve_get_average_today, resolve_get_between,
+                     resolve_get_latest, resolve_get_max,
+                     resolve_get_max_between, resolve_get_max_today,
+                     resolve_get_min, resolve_get_min_between,
+                     resolve_get_min_today, resolve_get_today)
 
 query = ObjectType("Query")
 query.set_field("getMax", resolve_get_max)
@@ -37,13 +42,8 @@ schema = make_executable_schema(
 
 
 @app.errorhandler(404)
-def page_not_found(e=None):
+def page_not_found(e):
     return jsonify({'error': 'not found'}), 404
-
-
-@app.route("/", methods=["GET"])
-def main():
-    return page_not_found()
 
 
 @app.route("/graphql", methods=["POST"])
