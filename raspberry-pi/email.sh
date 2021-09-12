@@ -12,9 +12,7 @@ email="email"
 } >>content_email.txt
 
 curl --url 'smtps://smtp.gmail.com:465' --ssl-reqd \
-  --mail-from "${email}" \
-  --mail-rcpt "${email}" \
-  -ns \
-  -T content_email.txt
+  --mail-from "${email}" --mail-rcpt "${email}" \
+  -ns -T content_email.txt
 
 rm content_email.txt

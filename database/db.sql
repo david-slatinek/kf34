@@ -15,8 +15,7 @@ ALTER TABLE
 ADD
     CONSTRAINT fkc_device_data FOREIGN KEY (fk_device) REFERENCES device(id_device) ON UPDATE CASCADE ON DELETE RESTRICT;
 
-SET
-    TIMEZONE TO 'Europe/Ljubljana';
+SET TIMEZONE TO 'Europe/Ljubljana';
 
 INSERT INTO
     device (device_type)
