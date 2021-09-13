@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
+import logging
+import subprocess
+from enum import Enum
+from os import environ
+
 import adafruit_dht
 import requests
 from board import D17
-import logging
-import subprocess
-from os import environ
-from enum import Enum
 
 logging.basicConfig(level=logging.ERROR, filename="errors.log", filemode="a", format="%(asctime)s---%(message)s",
                     datefmt="%d.%m.%Y %H:%M:%S")

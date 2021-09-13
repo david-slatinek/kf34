@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
-from sys import argv
 import getopt
+from signal import SIGINT, SIGTERM, pause, signal
+from sys import argv
+
 from gpiozero import LED, Buzzer
-from signal import pause, signal, SIGTERM, SIGINT
 
 led_pin, buzzer_pin = 18, 27
 led = LED(led_pin)
