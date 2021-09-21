@@ -10,15 +10,13 @@ CREATE TABLE IF NOT EXISTS data (
     fk_device INT NOT NULL
 );
 
-ALTER TABLE
-    data
-ADD
-    CONSTRAINT fkc_device_data FOREIGN KEY (fk_device) REFERENCES device(id_device) ON UPDATE CASCADE ON DELETE RESTRICT;
+ALTER TABLE data
+ADD CONSTRAINT fkc_device_data
+FOREIGN KEY (fk_device)
+REFERENCES device(id_device)
+ON UPDATE CASCADE ON DELETE RESTRICT;
 
 SET TIMEZONE TO 'Europe/Ljubljana';
 
-INSERT INTO
-    device (device_type)
-VALUES
-    ('TEMPERATURE'),
-    ('HUMIDITY');
+INSERT INTO device (device_type)
+VALUES ('TEMPERATURE'), ('HUMIDITY');
