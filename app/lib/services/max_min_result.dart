@@ -1,17 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart';
-import 'return_fields.dart';
-import 'device_type.dart';
+
+import 'package:app/services/return_fields.dart';
+import 'package:app/services/device_type.dart';
 
 class MaxMinResult extends ReturnFields {
   double data = -1;
   List<String> captured = [];
-
-  static final url = Uri.parse('https://kf34.herokuapp.com/graphql');
-  static const Map<String, String> headers = {
-    "X-API-Key": '',
-    "Content-Type": "application/json",
-  };
 
   MaxMinResult() : super();
 
@@ -28,8 +23,8 @@ class MaxMinResult extends ReturnFields {
     ''';
 
     try {
-      Response response = await post(url,
-          headers: headers,
+      Response response = await post(ReturnFields.url,
+          headers: ReturnFields.headers,
           body: jsonEncode({
             'query': query,
             'variables': {'device_type': type.asString()}
@@ -57,6 +52,7 @@ class MaxMinResult extends ReturnFields {
 
   @override
   String toString() {
-    return super.toString() + '\nMaxMinResult{data: $data, captured: $captured}';
+    return super.toString() +
+        '\nMaxMinResult{data: $data, captured: $captured}';
   }
 }

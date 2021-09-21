@@ -1,11 +1,14 @@
 import 'package:app/services/device_type.dart';
 import 'package:flutter/material.dart';
 import 'package:app/services/max_min_result.dart';
+import 'package:app/services/avg_result.dart';
 
 Future<void> main() async {
   runApp(const MyApp());
-  MaxMinResult result = MaxMinResult();
-  await result.getMax(DeviceType.TEMPERATURE);
+  // MaxMinResult result = MaxMinResult();
+  // await result.getMax(DeviceType.TEMPERATURE);
+  AvgResult result = AvgResult();
+  await result.getData(DeviceType.HUMIDITY);
   print(result);
 }
 
