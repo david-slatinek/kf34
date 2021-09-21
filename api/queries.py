@@ -144,10 +144,11 @@ def resolve_get_latest(obj, info, device_type):
     return data_retrieve("""
             SELECT data.*
             FROM data
-            JOIN device
-            ON data.fk_device = device.id_device
-            WHERE data.capture = (SELECT MAX(capture) FROM data)
-            AND device.device_type = :device_type;
+            WHERE data.capture =
+                (SELECT MAX(capture) FROM data
+                JOIN device
+                ON data.fk_device = device.id_device
+                WHERE device.device_type = :device_type);
         """, {"device_type": device_type})
 
 
