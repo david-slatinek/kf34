@@ -15,10 +15,10 @@ class MaxMinResult extends ReturnFields {
 
   MaxMinResult() : super();
 
-  Future<void> getMax(DeviceType type) async {
-    const String query = '''
-      query GetMax (\$device_type: DeviceType!) {
-        getMax(device_type: \$device_type) {
+  Future<void> _getData(DeviceType type, String method) async {
+    String query = '''
+      query ${method.toUpperCase()}(\$device_type: DeviceType!) {
+        $method(device_type: \$device_type) {
             success
             error
             data
@@ -37,10 +37,11 @@ class MaxMinResult extends ReturnFields {
 
       if (response.statusCode == 200) {
         Map mapData = jsonDecode(response.body);
-        success = mapData['data']['getMax']['success'];
-        error = mapData['data']['getMax']['error'];
-        data = mapData['data']['getMax']['data'];
-        captured = (mapData['data']['getMax']['captured'] as List<dynamic>).cast<String>();
+        success = mapData['data'][method]['success'];
+        error = mapData['data'][method]['error'];
+        data = mapData['data'][method]['data'];
+        captured = (mapData['data'][method]['captured'] as List<dynamic>)
+            .cast<String>();
       } else {
         throw Exception('Error code: ' + response.statusCode.toString());
       }
@@ -48,5 +49,14 @@ class MaxMinResult extends ReturnFields {
       error = e.toString();
       print(e);
     }
+  }
+
+  Future<void> getMax(DeviceType type) async => _getData(type, 'getMax');
+
+  Future<void> getMin(DeviceType type) async => _getData(type, 'getMin');
+
+  @override
+  String toString() {
+    return super.toString() + '\nMaxMinResult{data: $data, captured: $captured}';
   }
 }

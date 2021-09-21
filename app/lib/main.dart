@@ -2,10 +2,11 @@ import 'package:app/services/device_type.dart';
 import 'package:flutter/material.dart';
 import 'package:app/services/max_min_result.dart';
 
-void main() {
+Future<void> main() async {
   runApp(const MyApp());
   MaxMinResult result = MaxMinResult();
-  result.getMax(DeviceType.TEMPERATURE);
+  await result.getMax(DeviceType.TEMPERATURE);
+  print(result);
 }
 
 class MyApp extends StatelessWidget {
