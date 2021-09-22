@@ -7,7 +7,9 @@ import 'package:http/http.dart';
 class AvgResult extends ReturnFields {
   double data = -1;
 
-  Future<void> getData(DeviceType type) async {
+  AvgResult({required DeviceType type}) : super(type: type);
+
+  Future<void> getData() async {
     String query = '''
       query GetAverage(\$device_type: DeviceType!) {
         getAverage(device_type: \$device_type) {

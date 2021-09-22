@@ -1,14 +1,14 @@
 import 'dart:convert';
+
+import 'package:app/services/data.dart';
+import 'package:app/services/device_type.dart';
+import 'package:app/services/return_fields.dart';
 import 'package:http/http.dart';
 
-import 'package:app/services/return_fields.dart';
-import 'package:app/services/device_type.dart';
+class DataResult extends ReturnFields {
+  List<Data> data = [];
 
-class MaxMinResult extends ReturnFields {
-  double data = -1;
-  List<String> captured = [];
-
-  MaxMinResult({required DeviceType type}) : super(type: type);
+  DataResult({required DeviceType type}) : super(type: type);
 
   Future<void> _getData(String method) async {
     String query = '''
@@ -16,8 +16,12 @@ class MaxMinResult extends ReturnFields {
         $method(device_type: \$device_type) {
             success
             error
-            data
-            captured
+            data {
+                  id_data
+                  capture
+                  value
+                  fk_device
+            }
         }
       }
     ''';
@@ -34,9 +38,9 @@ class MaxMinResult extends ReturnFields {
         Map mapData = jsonDecode(response.body);
         success = mapData['data'][method]['success'];
         error = mapData['data'][method]['error'];
-        data = mapData['data'][method]['data'];
-        captured = (mapData['data'][method]['captured'] as List<dynamic>)
-            .cast<String>();
+
+        data = List<Data>.from(
+            mapData['data'][method]['data'].map((i) => Data.fromJson(i)));
       } else {
         throw Exception('Error code: ' + response.statusCode.toString());
       }
@@ -46,13 +50,12 @@ class MaxMinResult extends ReturnFields {
     }
   }
 
-  Future<void> getMax() async => _getData('getMax');
+  Future<void> getToday() async => _getData('getToday');
 
-  Future<void> getMin() async => _getData('getMin');
+  Future<void> getLatest() async => _getData('getLatest');
 
   @override
   String toString() {
-    return super.toString() +
-        '\nMaxMinResult{data: $data, captured: $captured}';
+    return super.toString() + '\nDataResult{data: $data}';
   }
 }
