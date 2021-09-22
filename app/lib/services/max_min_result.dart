@@ -48,7 +48,11 @@ class MaxMinResult extends ReturnFields {
 
   Future<void> getMax() async => _getData('getMax');
 
+  Future<void> getMaxToday() async => _getData('getMaxToday');
+
   Future<void> getMin() async => _getData('getMin');
+
+  Future<void> getMinToday() async => _getData('getMinToday');
 
   @override
   String toString() {

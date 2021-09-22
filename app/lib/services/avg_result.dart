@@ -9,10 +9,10 @@ class AvgResult extends ReturnFields {
 
   AvgResult({required DeviceType type}) : super(type: type);
 
-  Future<void> getData() async {
+  Future<void> _getData(String method) async {
     String query = '''
-      query GetAverage(\$device_type: DeviceType!) {
-        getAverage(device_type: \$device_type) {
+      query ${method.toUpperCase()}(\$device_type: DeviceType!) {
+        $method(device_type: \$device_type) {
             success
             error
             data
@@ -30,9 +30,9 @@ class AvgResult extends ReturnFields {
 
       if (response.statusCode == 200) {
         Map mapData = jsonDecode(response.body);
-        success = mapData['data']['getAverage']['success'];
-        error = mapData['data']['getAverage']['error'];
-        data = mapData['data']['getAverage']['data'];
+        success = mapData['data'][method]['success'];
+        error = mapData['data'][method]['error'];
+        data = mapData['data'][method]['data'];
       } else {
         throw Exception('Error code: ' + response.statusCode.toString());
       }
@@ -41,6 +41,10 @@ class AvgResult extends ReturnFields {
       print(e);
     }
   }
+
+  Future<void> getAverage() async => _getData('getAverage');
+
+  Future<void> getAverageToday() async => _getData('getAverageToday');
 
   @override
   String toString() {
