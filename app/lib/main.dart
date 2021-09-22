@@ -1,21 +1,15 @@
-import 'package:app/services/data_result.dart';
+import 'package:app/services/data_wrapper.dart';
 import 'package:app/services/device_type.dart';
 import 'package:app/services/return_fields.dart';
 import 'package:flutter/material.dart';
-import 'package:app/services/max_min_result.dart';
-import 'package:app/services/avg_result.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 Future<void> main() async {
   runApp(const MyApp());
   ReturnFields.key = (await const FlutterSecureStorage().read(key: 'key'))!;
-  // MaxMinResult result = MaxMinResult(type: DeviceType.TEMPERATURE);
-  // await result.getMinToday();
-  // AvgResult result = AvgResult(type: DeviceType.TEMPERATURE);
-  // await result.getAverageToday();
-  DataResult result = DataResult(type: DeviceType.TEMPERATURE);
-  await result.getToday();
-  print(result);
+  DataWrapper data = DataWrapper(type: DeviceType.TEMPERATURE);
+  await data.getData();
+  print(data.max);
 }
 
 class MyApp extends StatelessWidget {
