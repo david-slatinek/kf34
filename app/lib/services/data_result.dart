@@ -38,9 +38,10 @@ class DataResult extends ReturnFields {
         Map mapData = jsonDecode(response.body);
         success = mapData['data'][method]['success'];
         error = mapData['data'][method]['error'];
-
-        data = List<Data>.from(
-            mapData['data'][method]['data'].map((i) => Data.fromJson(i)));
+        if (mapData['data'][method]['data'] != null) {
+          data = List<Data>.from(
+              mapData['data'][method]['data'].map((i) => Data.fromJson(i)));
+        }
       } else {
         throw Exception('Error code: ' + response.statusCode.toString());
       }

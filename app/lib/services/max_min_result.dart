@@ -34,9 +34,10 @@ class MaxMinResult extends ReturnFields {
         Map mapData = jsonDecode(response.body);
         success = mapData['data'][method]['success'];
         error = mapData['data'][method]['error'];
-        data = mapData['data'][method]['data'];
-        captured = (mapData['data'][method]['captured'] as List<dynamic>)
-            .cast<String>();
+        data = mapData['data'][method]['data'] ?? -1;
+        if (mapData['data'][method]['captured'] != null) {
+          captured = List<String>.from(mapData['data'][method]['captured']);
+        }
       } else {
         throw Exception('Error code: ' + response.statusCode.toString());
       }

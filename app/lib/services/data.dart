@@ -1,14 +1,14 @@
 class Data {
-  int idData;
-  String capture;
-  double value;
-  int? fkDevice;
+  int idData = -1;
+  String capture = '';
+  double value = -1;
+  int? fkDevice = -1;
 
   Data(
       {required this.idData,
       required this.capture,
       required this.value,
-      this.fkDevice});
+      required this.fkDevice});
 
   @override
   String toString() {
@@ -16,6 +16,10 @@ class Data {
   }
 
   static Data fromJson(Map<String, dynamic> json) {
-    return Data(idData: int.parse(json['id_data']), capture: json['capture'], value: json['value'], fkDevice: json['fk_device']);
+    return Data(
+        idData: int.parse(json['id_data']),
+        capture: json['capture'],
+        value: json['value'] ?? -1,
+        fkDevice: json['fk_device']);
   }
 }
