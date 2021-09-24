@@ -5,7 +5,7 @@ import 'package:app/services/return_fields.dart';
 import 'package:app/services/device_type.dart';
 
 class MaxMinResult extends ReturnFields {
-  double data = -1;
+  double data = -999;
   List<String> captured = [];
 
   MaxMinResult({required DeviceType type}) : super(type: type);

@@ -1,8 +1,8 @@
 class Data {
-  int idData = -1;
+  int idData = -999;
   String capture = '';
-  double value = -1;
-  int? fkDevice = -1;
+  double value = -999;
+  int? fkDevice = -999;
 
   Data(
       {required this.idData,
