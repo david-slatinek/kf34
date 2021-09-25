@@ -32,7 +32,7 @@ class AvgResult extends ReturnFields {
         Map mapData = jsonDecode(response.body);
         success = mapData['data'][method]['success'];
         error = mapData['data'][method]['error'];
-        data = mapData['data'][method]['data'] ?? -1;
+        data = mapData['data'][method]['data'] ?? -999;
       } else {
         throw Exception('Error code: ' + response.statusCode.toString());
       }

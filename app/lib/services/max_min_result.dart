@@ -34,7 +34,7 @@ class MaxMinResult extends ReturnFields {
         Map mapData = jsonDecode(response.body);
         success = mapData['data'][method]['success'];
         error = mapData['data'][method]['error'];
-        data = mapData['data'][method]['data'] ?? -1;
+        data = mapData['data'][method]['data'] ?? -999;
         if (mapData['data'][method]['captured'] != null) {
           captured = List<String>.from(mapData['data'][method]['captured']);
         }

@@ -3,6 +3,7 @@ import 'package:app/services/device_type.dart';
 import 'package:app/services/return_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -12,18 +13,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  void setup() async {
-    ReturnFields.key =
-        await const FlutterSecureStorage().read(key: 'key') ?? '401';
-    DataWrapper data = DataWrapper(type: DeviceType.TEMPERATURE);
-    await data.getData();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    setup();
-  }
+  DataWrapper data = DataWrapper(type: DeviceType.TEMPERATURE);
 
   Widget buildCard(
       {required BuildContext context,
@@ -49,7 +39,9 @@ class _HomeState extends State<Home> {
                     ),
                     if (addViewButton)
                       OutlinedButton.icon(
-                        onPressed: () {},
+                        onPressed: () {
+                          print('Navigator.push(/view)');
+                        },
                         icon: const Text(
                           'View',
                           style: TextStyle(color: Colors.black),
@@ -88,6 +80,81 @@ class _HomeState extends State<Home> {
     );
   }
 
+  Widget homeScreenWidgets(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(10),
+      children: [
+        buildCard(
+            context: context, text: "Latest", value: data.latest.data[0].value),
+        buildDivider(context),
+        buildCard(
+            context: context,
+            text: "Average today",
+            value: data.avgToday.data,
+            addViewButton: false),
+        buildDivider(context),
+        buildCard(
+            context: context, text: 'Max today', value: data.maxToday.data),
+        buildDivider(context),
+        buildCard(
+            context: context, text: 'Min today', value: data.minToday.data),
+        buildDivider(context),
+        buildCard(context: context, text: 'Absolute max', value: data.max.data),
+        buildDivider(context),
+        buildCard(context: context, text: 'Absolute min', value: data.min.data),
+      ],
+    );
+  }
+
+  Widget loading(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: const [
+        SpinKitFadingCircle(
+          color: Color.fromRGBO(255, 125, 10, 1),
+          size: 80.0,
+        ),
+        SizedBox(
+          width: 20,
+        ),
+        Text(
+          "Loading",
+          style: TextStyle(
+              fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+      ],
+    );
+  }
+
+  Widget infoWidget(BuildContext context, String text, IconData iconData) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              text,
+              style: const TextStyle(fontSize: 30),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              iconData,
+              size: 40,
+            ),
+          ],
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,25 +185,24 @@ class _HomeState extends State<Home> {
           ),
           centerTitle: true,
         ),
-        body: ListView(
-          padding: const EdgeInsets.all(10),
-          children: [
-            buildCard(context: context, text: "Latest", value: 25.40),
-            buildDivider(context),
-            buildCard(
-                context: context,
-                text: "Average today",
-                value: 22.10,
-                addViewButton: false),
-            buildDivider(context),
-            buildCard(context: context, text: 'Max today', value: 26.2),
-            buildDivider(context),
-            buildCard(context: context, text: 'Min today', value: 18.5),
-            buildDivider(context),
-            buildCard(context: context, text: 'Absolute max', value: 28),
-            buildDivider(context),
-            buildCard(context: context, text: 'Absolute min', value: 14.4),
-          ],
-        ));
+        body: FutureBuilder(
+            future: data.getData(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  return infoWidget(context, 'Not connected', Icons.wifi_lock);
+                case ConnectionState.waiting:
+                  return loading(context);
+                case ConnectionState.active:
+                  return infoWidget(context, 'Active connection', Icons.add);
+                case ConnectionState.done:
+                  if (snapshot.hasError) {
+                    return infoWidget(
+                        context, 'Error: ${snapshot.error}', Icons.error);
+                  } else {
+                    return homeScreenWidgets(context);
+                  }
+              }
+            }));
   }
 }

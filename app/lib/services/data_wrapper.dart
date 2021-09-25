@@ -2,6 +2,8 @@ import 'package:app/services/avg_result.dart';
 import 'package:app/services/data_result.dart';
 import 'package:app/services/device_type.dart';
 import 'package:app/services/max_min_result.dart';
+import 'package:app/services/return_fields.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DataWrapper {
   final DeviceType type;
@@ -23,6 +25,8 @@ class DataWrapper {
   }
 
   Future<void> getData() async {
+   ReturnFields.key =
+        await const FlutterSecureStorage().read(key: 'key') ?? '401';
     try {
       await Future.wait([
         max.getMax(),

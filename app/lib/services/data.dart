@@ -19,7 +19,7 @@ class Data {
     return Data(
         idData: int.parse(json['id_data']),
         capture: json['capture'],
-        value: json['value'] ?? -1,
+        value: json['value'] ?? -999,
         fkDevice: json['fk_device']);
   }
 }
