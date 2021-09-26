@@ -3,6 +3,7 @@ import 'package:app/services/device_type.dart';
 import 'package:app/services/return_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart';
 
@@ -59,7 +60,7 @@ class _HomeState extends State<Home> {
                   width: 30,
                 ),
                 Text(
-                  value.toString(),
+                  value.toString() + data.symbol(),
                   style: const TextStyle(
                       fontSize: 40,
                       color: Colors.black,
@@ -78,32 +79,6 @@ class _HomeState extends State<Home> {
       color: Color.fromRGBO(196, 31, 59, 1),
       thickness: 1,
       height: 40,
-    );
-  }
-
-  Widget homeScreenWidgets() {
-    return ListView(
-      padding: const EdgeInsets.all(10),
-      children: [
-        buildCard(
-            context: context, text: "Latest", value: data.latest.data[0].value),
-        buildDivider(context),
-        buildCard(
-            context: context,
-            text: "Average today",
-            value: data.avgToday.data,
-            addViewButton: false),
-        buildDivider(context),
-        buildCard(
-            context: context, text: 'Max today', value: data.maxToday.data),
-        buildDivider(context),
-        buildCard(
-            context: context, text: 'Min today', value: data.minToday.data),
-        buildDivider(context),
-        buildCard(context: context, text: 'Absolute max', value: data.max.data),
-        buildDivider(context),
-        buildCard(context: context, text: 'Absolute min', value: data.min.data),
-      ],
     );
   }
 
@@ -128,35 +103,42 @@ class _HomeState extends State<Home> {
   }
 
   Widget infoWidget(String text, IconData iconData) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              text,
-              style: const TextStyle(fontSize: 30),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              iconData,
-              size: 40,
-            ),
-          ],
-        )
-      ],
+    return SafeArea(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Text(
+                  text,
+                  style: const TextStyle(fontSize: 30),
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                iconData,
+                size: 40,
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 
   Future<bool> _isServerOnline() async {
+    ReturnFields.key =
+        await const FlutterSecureStorage().read(key: 'key') ?? '401';
+
     try {
       Response response = await get(ReturnFields.url);
       if (response.statusCode == 503) {
@@ -164,7 +146,6 @@ class _HomeState extends State<Home> {
       }
       return true;
     } catch (e) {
-      print(e.toString());
       return false;
     }
   }
@@ -186,6 +167,36 @@ class _HomeState extends State<Home> {
               SystemChannels.platform.invokeMethod('SystemNavigator.pop');
             },
             child: const Text('OK'))
+      ],
+    );
+  }
+
+  Widget homeScreenWidgets() {
+    if (data.latest.data.isEmpty) {
+      return infoWidget('Error: ${data.latest.error}', Icons.error);
+    }
+
+    return ListView(
+      padding: const EdgeInsets.all(10),
+      children: [
+        buildCard(
+            context: context, text: "Latest", value: data.latest.data[0].value),
+        buildDivider(context),
+        buildCard(
+            context: context,
+            text: "Average today",
+            value: data.avgToday.data,
+            addViewButton: false),
+        buildDivider(context),
+        buildCard(
+            context: context, text: 'Max today', value: data.maxToday.data),
+        buildDivider(context),
+        buildCard(
+            context: context, text: 'Min today', value: data.minToday.data),
+        buildDivider(context),
+        buildCard(context: context, text: 'Absolute max', value: data.max.data),
+        buildDivider(context),
+        buildCard(context: context, text: 'Absolute min', value: data.min.data),
       ],
     );
   }
@@ -232,9 +243,8 @@ class _HomeState extends State<Home> {
                 case ConnectionState.done:
                   if (snapshot.hasError) {
                     return infoWidget('Error: ${snapshot.error}', Icons.error);
-                  } else {
-                    return homeScreenWidgets();
                   }
+                  return homeScreenWidgets();
               }
             }));
   }

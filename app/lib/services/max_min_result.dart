@@ -38,12 +38,12 @@ class MaxMinResult extends ReturnFields {
         if (mapData['data'][method]['captured'] != null) {
           captured = List<String>.from(mapData['data'][method]['captured']);
         }
+        success = true;
       } else {
         throw Exception('Error code: ' + response.statusCode.toString());
       }
     } catch (e) {
       error = e.toString();
-      print(e);
     }
   }
 

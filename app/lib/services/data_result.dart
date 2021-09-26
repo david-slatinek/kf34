@@ -45,9 +45,9 @@ class DataResult extends ReturnFields {
       } else {
         throw Exception('Error code: ' + response.statusCode.toString());
       }
+      success = true;
     } catch (e) {
       error = e.toString();
-      print(e);
     }
   }
 
