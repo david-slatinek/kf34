@@ -5,13 +5,12 @@ import 'package:app/services/max_min_result.dart';
 import 'package:app/services/return_fields.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class DataWrapper {
-  final DeviceType type;
+class DataWrapper extends ReturnFields {
   late MaxMinResult max, min, maxToday, minToday;
   late AvgResult avg, avgToday;
   late DataResult today, latest;
 
-  DataWrapper({required this.type}) {
+  DataWrapper({required type}) : super(type: type) {
     max = MaxMinResult(type: type);
     min = MaxMinResult(type: type);
     maxToday = MaxMinResult(type: type);
@@ -38,7 +37,9 @@ class DataWrapper {
         today.getToday(),
         latest.getLatest(),
       ]);
+      success = true;
     } catch (e) {
+      error = e.toString();
       print(e);
     }
   }

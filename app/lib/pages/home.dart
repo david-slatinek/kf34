@@ -2,8 +2,9 @@ import 'package:app/services/data_wrapper.dart';
 import 'package:app/services/device_type.dart';
 import 'package:app/services/return_fields.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:http/http.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -80,7 +81,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget homeScreenWidgets(BuildContext context) {
+  Widget homeScreenWidgets() {
     return ListView(
       padding: const EdgeInsets.all(10),
       children: [
@@ -106,7 +107,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget loading(BuildContext context) {
+  Widget loading() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: const [
@@ -126,7 +127,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget infoWidget(BuildContext context, String text, IconData iconData) {
+  Widget infoWidget(String text, IconData iconData) {
     return Column(
       children: [
         Row(
@@ -155,8 +156,41 @@ class _HomeState extends State<Home> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Future<bool> _isServerOnline() async {
+    try {
+      Response response = await get(ReturnFields.url);
+      if (response.statusCode == 503) {
+        throw Exception('Server not online');
+      }
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  bool network = false;
+
+  Future<void> _checkInternet() async {
+    network = await _isServerOnline();
+  }
+
+  Widget _alertDialog() {
+    return AlertDialog(
+      title: const Text('No network connection or server error'),
+      content: const Text(
+          'No network connectivity or server error, the program will now close.'),
+      actions: [
+        TextButton(
+            onPressed: () {
+              SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+            },
+            child: const Text('OK'))
+      ],
+    );
+  }
+
+  Widget mainScreen() {
     return Scaffold(
         appBar: AppBar(
           actions: [
@@ -190,19 +224,44 @@ class _HomeState extends State<Home> {
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
-                  return infoWidget(context, 'Not connected', Icons.wifi_lock);
+                  return infoWidget('Not connected', Icons.wifi_lock);
                 case ConnectionState.waiting:
-                  return loading(context);
+                  return loading();
                 case ConnectionState.active:
-                  return infoWidget(context, 'Active connection', Icons.add);
+                  return infoWidget('Active connection', Icons.add);
                 case ConnectionState.done:
                   if (snapshot.hasError) {
-                    return infoWidget(
-                        context, 'Error: ${snapshot.error}', Icons.error);
+                    return infoWidget('Error: ${snapshot.error}', Icons.error);
                   } else {
-                    return homeScreenWidgets(context);
+                    return homeScreenWidgets();
                   }
               }
             }));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: FutureBuilder(
+      future: _checkInternet(),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return infoWidget('Not connected', Icons.wifi_lock);
+          case ConnectionState.waiting:
+            return loading();
+          case ConnectionState.active:
+            return infoWidget('Active connection', Icons.add);
+          case ConnectionState.done:
+            if (snapshot.hasError) {
+              return infoWidget('Error: ${snapshot.error}', Icons.error);
+            }
+            if (!network) {
+              return _alertDialog();
+            }
+            return mainScreen();
+        }
+      },
+    ));
   }
 }
