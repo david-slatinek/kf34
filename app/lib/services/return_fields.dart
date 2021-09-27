@@ -15,11 +15,6 @@ abstract class ReturnFields {
     "Content-Type": "application/json",
   };
 
-  @override
-  String toString() {
-    return 'ReturnFields{success: $success, error: $error}';
-  }
-
   static String formatDate(String datetime) =>
       DateFormat('dd-MM-yyyy HH:mm').format(DateTime.parse(datetime));
 }

@@ -1,3 +1,4 @@
+import 'package:app/pages/sensor.dart';
 import 'package:app/pages/view.dart';
 import 'package:app/services/data_wrapper.dart';
 import 'package:app/services/device_type.dart';
@@ -223,9 +224,19 @@ class _HomeState extends State<Home> {
         appBar: AppBar(
           actions: [
             IconButton(
-                tooltip: 'Choose sensor',
-                onPressed: () {
-                  print('Navigator.push(/sensor)');
+                tooltip: 'Choose sensor type',
+                onPressed: () async {
+                  dynamic result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Sensor(),
+                      ));
+
+                  setState(() {
+                    if (result != null) {
+                      data = DataWrapper(type: result['deviceType']);
+                    }
+                  });
                 },
                 icon: const Icon(
                   Icons.menu,

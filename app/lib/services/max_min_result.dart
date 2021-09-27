@@ -56,10 +56,4 @@ class MaxMinResult extends ReturnFields {
   Future<void> getMin() async => _getData('getMin');
 
   Future<void> getMinToday() async => _getData('getMinToday');
-
-  @override
-  String toString() {
-    return super.toString() +
-        '\nMaxMinResult{data: $data, captured: $captured}';
-  }
 }

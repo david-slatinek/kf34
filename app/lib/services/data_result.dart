@@ -54,9 +54,4 @@ class DataResult extends ReturnFields {
   Future<void> getToday() async => _getData('getToday');
 
   Future<void> getLatest() async => _getData('getLatest');
-
-  @override
-  String toString() {
-    return super.toString() + '\nDataResult{data: $data}';
-  }
 }

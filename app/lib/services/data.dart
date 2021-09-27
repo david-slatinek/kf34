@@ -12,11 +12,6 @@ class Data {
       required this.value,
       required this.fkDevice});
 
-  @override
-  String toString() {
-    return 'Data{idData: $idData, capture: $capture, value: $value, fkDevice: $fkDevice}';
-  }
-
   static Data fromJson(Map<String, dynamic> json) {
     return Data(
         idData: int.parse(json['id_data']),
