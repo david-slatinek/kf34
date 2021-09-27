@@ -1,3 +1,4 @@
+import 'package:app/pages/view.dart';
 import 'package:app/services/data_wrapper.dart';
 import 'package:app/services/device_type.dart';
 import 'package:app/services/return_fields.dart';
@@ -18,9 +19,9 @@ class _HomeState extends State<Home> {
   DataWrapper data = DataWrapper(type: DeviceType.TEMPERATURE);
 
   Widget buildCard(
-      {required BuildContext context,
-      required String text,
+      {required String text,
       required double value,
+      required List<String> capture,
       bool addViewButton = true}) {
     return Card(
       elevation: 10,
@@ -42,7 +43,11 @@ class _HomeState extends State<Home> {
                     if (addViewButton)
                       OutlinedButton.icon(
                         onPressed: () {
-                          print('Navigator.push(/view)');
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => View(capture: capture),
+                              ));
                         },
                         icon: const Text(
                           'View',
@@ -74,7 +79,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget buildDivider(BuildContext context) {
+  Widget buildDivider() {
     return const Divider(
       color: Color.fromRGBO(196, 31, 59, 1),
       thickness: 1,
@@ -180,23 +185,35 @@ class _HomeState extends State<Home> {
       padding: const EdgeInsets.all(10),
       children: [
         buildCard(
-            context: context, text: "Latest", value: data.latest.data[0].value),
-        buildDivider(context),
+            text: "Latest",
+            value: data.latest.data[0].value,
+            capture: List<String>.filled(1, data.latest.data[0].capture)),
+        buildDivider(),
         buildCard(
-            context: context,
             text: "Average today",
             value: data.avgToday.data,
+            capture: [],
             addViewButton: false),
-        buildDivider(context),
+        buildDivider(),
         buildCard(
-            context: context, text: 'Max today', value: data.maxToday.data),
-        buildDivider(context),
+            text: 'Max today',
+            capture: data.maxToday.captured,
+            value: data.maxToday.data),
+        buildDivider(),
         buildCard(
-            context: context, text: 'Min today', value: data.minToday.data),
-        buildDivider(context),
-        buildCard(context: context, text: 'Absolute max', value: data.max.data),
-        buildDivider(context),
-        buildCard(context: context, text: 'Absolute min', value: data.min.data),
+            text: 'Min today',
+            capture: data.minToday.captured,
+            value: data.minToday.data),
+        buildDivider(),
+        buildCard(
+            text: 'Absolute max',
+            capture: data.max.captured,
+            value: data.max.data),
+        buildDivider(),
+        buildCard(
+            text: 'Absolute min',
+            capture: data.min.captured,
+            value: data.min.data),
       ],
     );
   }

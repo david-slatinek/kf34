@@ -1,3 +1,4 @@
+import 'package:app/pages/view.dart';
 import 'package:flutter/material.dart';
 import 'package:app/pages/home.dart';
 
@@ -10,6 +11,7 @@ Future<void> main() async {
     initialRoute: '/',
     routes: {
       '/': (context) => const Home(),
+      '/view': (context) => const View(capture: [],),
     },
   ));
 }

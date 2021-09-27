@@ -16,7 +16,5 @@ FOREIGN KEY (fk_device)
 REFERENCES device(id_device)
 ON UPDATE CASCADE ON DELETE RESTRICT;
 
-SET TIMEZONE TO 'Europe/Ljubljana';
-
 INSERT INTO device (device_type)
 VALUES ('TEMPERATURE'), ('HUMIDITY');

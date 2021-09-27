@@ -36,7 +36,9 @@ class MaxMinResult extends ReturnFields {
         error = mapData['data'][method]['error'];
         data = mapData['data'][method]['data'] ?? -999;
         if (mapData['data'][method]['captured'] != null) {
-          captured = List<String>.from(mapData['data'][method]['captured']);
+          for (String s in mapData['data'][method]['captured']) {
+            captured.add(ReturnFields.formatDate(s));
+          }
         }
         success = true;
       } else {

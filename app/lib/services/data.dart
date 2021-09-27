@@ -1,3 +1,5 @@
+import 'package:app/services/return_fields.dart';
+
 class Data {
   int idData = -999;
   String capture = '';
@@ -18,7 +20,7 @@ class Data {
   static Data fromJson(Map<String, dynamic> json) {
     return Data(
         idData: int.parse(json['id_data']),
-        capture: json['capture'],
+        capture: ReturnFields.formatDate(json['capture']),
         value: json['value'] ?? -999,
         fkDevice: json['fk_device']);
   }

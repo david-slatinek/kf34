@@ -1,4 +1,5 @@
 import 'package:app/services/device_type.dart';
+import 'package:intl/intl.dart';
 
 abstract class ReturnFields {
   bool success = false;
@@ -18,4 +19,7 @@ abstract class ReturnFields {
   String toString() {
     return 'ReturnFields{success: $success, error: $error}';
   }
+
+  static String formatDate(String datetime) =>
+      DateFormat('dd-MM-yyyy HH:mm').format(DateTime.parse(datetime));
 }
