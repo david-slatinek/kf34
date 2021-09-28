@@ -47,9 +47,8 @@ class View extends StatelessWidget {
             ),
           );
         },
-        separatorBuilder: (BuildContext context, int index) => const Divider(
-          thickness: 2,
-        ),
+        separatorBuilder: (BuildContext context, int index) =>
+            const Divider(thickness: 2),
       ),
     );
   }

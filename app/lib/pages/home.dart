@@ -88,26 +88,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget loading() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
-        SpinKitFadingCircle(
-          color: Color.fromRGBO(255, 125, 10, 1),
-          size: 80.0,
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        Text(
-          "Loading",
-          style: TextStyle(
-              fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-      ],
-    );
-  }
-
   Widget infoWidget(String text, IconData iconData) {
     return SafeArea(
       child: Column(
@@ -141,44 +121,8 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Future<bool> _isServerOnline() async {
-    ReturnFields.key =
-        await const FlutterSecureStorage().read(key: 'key') ?? '401';
-
-    try {
-      Response response = await get(ReturnFields.url);
-      if (response.statusCode == 503) {
-        throw Exception('Server not online');
-      }
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  bool network = false;
-
-  Future<void> _checkInternet() async {
-    network = await _isServerOnline();
-  }
-
-  Widget _alertDialog() {
-    return AlertDialog(
-      title: const Text('No network connection or server error'),
-      content: const Text(
-          'No network connectivity or server error, the program will now close.'),
-      actions: [
-        TextButton(
-            onPressed: () {
-              SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-            },
-            child: const Text('OK'))
-      ],
-    );
-  }
-
   Widget homeScreenWidgets() {
-    if (data.latest.data.isEmpty) {
+    if (!data.latest.success) {
       return infoWidget('Error: ${data.latest.error}', Icons.error);
     }
 
@@ -187,8 +131,13 @@ class _HomeState extends State<Home> {
       children: [
         buildCard(
             text: "Latest",
-            value: data.latest.data[0].value,
-            capture: List<String>.filled(1, data.latest.data[0].capture)),
+            value:
+                data.latest.data.isNotEmpty ? data.latest.data[0].value : -999,
+            capture: List<String>.filled(
+                1,
+                data.latest.data.isNotEmpty
+                    ? data.latest.data[0].capture
+                    : '')),
         buildDivider(),
         buildCard(
             text: "Average today",
@@ -197,24 +146,50 @@ class _HomeState extends State<Home> {
             addViewButton: false),
         buildDivider(),
         buildCard(
+            text: 'All today\'s values',
+            value: data.today.data.isNotEmpty ? data.today.data[0].value : -999,
+            capture: data.today.data.map((e) => e.capture).toList(),
+            addViewButton: true),
+        buildDivider(),
+        buildCard(
             text: 'Max today',
-            capture: data.maxToday.captured,
-            value: data.maxToday.data),
+            value: data.maxToday.data,
+            capture: data.maxToday.captured),
         buildDivider(),
         buildCard(
             text: 'Min today',
-            capture: data.minToday.captured,
-            value: data.minToday.data),
+            value: data.minToday.data,
+            capture: data.minToday.captured),
         buildDivider(),
         buildCard(
             text: 'Absolute max',
-            capture: data.max.captured,
-            value: data.max.data),
+            value: data.max.data,
+            capture: data.max.captured),
         buildDivider(),
         buildCard(
             text: 'Absolute min',
-            capture: data.min.captured,
-            value: data.min.data),
+            value: data.min.data,
+            capture: data.min.captured),
+      ],
+    );
+  }
+
+  Widget loading() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: const [
+        SpinKitFadingCircle(
+          color: Color.fromRGBO(255, 125, 10, 1),
+          size: 80.0,
+        ),
+        SizedBox(
+          width: 20,
+        ),
+        Text(
+          "Loading",
+          style: TextStyle(
+              fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
       ],
     );
   }
@@ -275,6 +250,42 @@ class _HomeState extends State<Home> {
                   return homeScreenWidgets();
               }
             }));
+  }
+
+  Widget _alertDialog() {
+    return AlertDialog(
+      title: const Text('No network connection or server error'),
+      content: const Text(
+          'No network connectivity or server error, the program will now close.'),
+      actions: [
+        TextButton(
+            onPressed: () {
+              SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+            },
+            child: const Text('OK'))
+      ],
+    );
+  }
+
+  Future<bool> _isServerOnline() async {
+    ReturnFields.key =
+        await const FlutterSecureStorage().read(key: 'key') ?? '401';
+
+    try {
+      Response response = await get(ReturnFields.url);
+      if (response.statusCode == 503) {
+        throw Exception('Server not online');
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  bool network = false;
+
+  Future<void> _checkInternet() async {
+    network = await _isServerOnline();
   }
 
   @override

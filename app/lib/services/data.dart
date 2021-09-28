@@ -16,7 +16,7 @@ class Data {
     return Data(
         idData: int.parse(json['id_data']),
         capture: ReturnFields.formatDate(json['capture']),
-        value: json['value'] ?? -999,
+        value: json['value'],
         fkDevice: json['fk_device']);
   }
 }
