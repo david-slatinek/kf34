@@ -1,18 +1,20 @@
+import os
+import uuid
+from enum import Enum
 from os import environ
 
 from ariadne import (ObjectType, graphql_sync, load_schema_from_path,
                      make_executable_schema, snake_case_fallback_resolvers)
-from flask import jsonify, request
+from flask import after_this_request, jsonify, request, send_file
 
 from __init__ import app
 from mutations import resolve_add_data
-from queries import (resolve_get_average, resolve_get_average_between,
-                     resolve_get_average_today, resolve_get_between,
-                     resolve_get_latest, resolve_get_max,
+from queries import (get_today_graph, resolve_get_average,
+                     resolve_get_average_between, resolve_get_average_today,
+                     resolve_get_between, resolve_get_latest, resolve_get_max,
                      resolve_get_max_between, resolve_get_max_today,
                      resolve_get_min, resolve_get_min_between,
-                     resolve_get_min_today, resolve_get_today,
-                     resolve_get_today_graph)
+                     resolve_get_min_today, resolve_get_today)
 
 query = ObjectType("Query")
 query.set_field("getMax", resolve_get_max)
@@ -21,7 +23,6 @@ query.set_field("getAverage", resolve_get_average)
 
 query.set_field("getToday", resolve_get_today)
 query.set_field("getLatest", resolve_get_latest)
-query.set_field("getTodayGraph", resolve_get_today_graph)
 
 query.set_field("getBetween", resolve_get_between)
 
@@ -43,9 +44,38 @@ schema = make_executable_schema(
 )
 
 
+class DeviceType(Enum):
+    TEMPERATURE = 0
+    HUMIDITY = 1
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return jsonify({'error': 'not found'}), 404
+
+
+@app.route("/image", methods=["GET"])
+def image():
+    if request.headers.get('X-API-Key') != app.config["KEY"]:
+        return jsonify({'error': 'api key not given or invalid'}), 401
+    data = request.get_json()
+
+    if data['device_type'] not in [d.name for d in DeviceType]:
+        return jsonify({'error': 'device_type is not valid'}), 400
+
+    file_id = str(uuid.uuid4())
+    payload = get_today_graph(data['device_type'], file_id)
+
+    if payload["success"]:
+        try:
+            @after_this_request
+            def remove_file(response):
+                os.remove(file_id + '.jpg')
+                return response
+            return send_file(file_id + '.jpg', mimetype='image/jpeg')
+        except FileNotFoundError as error:
+            jsonify({'error': str(error)}), 500
+    return payload, 400
 
 
 @app.route("/graphql", methods=["POST"])

@@ -141,45 +141,40 @@ def resolve_get_today(obj, info, device_type):
             ON data.fk_device = device.id_device
             WHERE CAST(capture AS DATE) = :today
             AND device.device_type = :device_type
-            ORDER BY data.capture;
+            ORDER BY data.capture DESC;
         """, {'today': str(date.today()), 'device_type': device_type})
 
 
-def resolve_get_today_graph(obj, info, device_type):
-    payload = resolve_get_today(obj, info, device_type)
-    try:
-        if payload["success"]:
-            data = payload["data"]
-            captures, values = [], []
-            for d in data:
-                captures.append(d["capture"].strftime("%H:%M"))
-                values.append(d["value"])
+def cm_to_inch(value):
+    return value / 2.54
 
-            fig = plt.figure()
-            ax = fig.add_subplot(111)
-            plt.plot(captures, values, marker='o')
-            for i, j in zip(captures, values):
-                ax.annotate(str(j), xy=(i, j + decimal.Decimal(0.1)))
 
-            plt.title('Today\'s values')
-            plt.xlabel('Capture time')
-            plt.ylabel(device_type)
-            plt.grid(True)
+def get_today_graph(device_type, file_id):
+    payload = resolve_get_today(None, None, device_type)
+    if payload["success"]:
+        data = payload["data"]
+        captures, values = [], []
+        for d in data:
+            captures.append(d["capture"].strftime("%H:%M"))
+            values.append(d["value"])
 
-            string_bytes = io.BytesIO()
-            plt.savefig(string_bytes, format='jpg')
-            string_bytes.seek(0)
-            image = base64.b64encode(string_bytes.read())
+        captures.reverse()
 
-            return {
-                "success": True,
-                "image": image.decode('utf-8')
-            }
-    except Exception as error:
+        plt.figure(figsize=(cm_to_inch(35), cm_to_inch(10)))
+        plt.plot(captures, values, marker='o')
+
+        plt.title('Today\'s values')
+        plt.xlabel('Capture time')
+        plt.ylabel(device_type)
+        plt.grid(True)
+        plt.savefig(file_id + '.jpg')
         return {
-            "success": False,
-            "error": str(error)
+            "success": True,
         }
+    return {
+        "success": False,
+        "error": payload["error"]
+    }
 
 
 def resolve_get_latest(obj, info, device_type):
@@ -264,6 +259,7 @@ def resolve_get_max_between(obj, info, begin_date, end_date, device_type):
                                 WHERE device.device_type = :device_type
                                 AND CAST(data.capture AS DATE) BETWEEN :begin_date AND :end_date
                                 GROUP BY device.id_device)
+            AND CAST(data.capture AS DATE) BETWEEN :begin_date AND :end_date
             ORDER BY data.capture DESC;
        """, {"begin_date": begin_date, "end_date": end_date, "device_type": device_type})
 
@@ -292,6 +288,7 @@ def resolve_get_min_between(obj, info, begin_date, end_date, device_type):
                                 WHERE device.device_type = :device_type
                                 AND CAST(data.capture AS DATE) BETWEEN :begin_date AND :end_date
                                 GROUP BY device.id_device)
+            AND CAST(data.capture AS DATE) BETWEEN :begin_date AND :end_date
             ORDER BY data.capture DESC;
        """, {"begin_date": begin_date, "end_date": end_date, "device_type": device_type})
 
