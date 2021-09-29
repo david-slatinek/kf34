@@ -160,7 +160,7 @@ def get_today_graph(device_type, file_id):
 
         captures.reverse()
 
-        plt.figure(figsize=(cm_to_inch(35), cm_to_inch(10)))
+        plt.figure(figsize=(cm_to_inch(65), cm_to_inch(10)))
         plt.plot(captures, values, marker='o')
 
         plt.title('Today\'s values')

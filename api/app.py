@@ -54,7 +54,7 @@ def page_not_found(e):
     return jsonify({'error': 'not found'}), 404
 
 
-@app.route("/image", methods=["GET"])
+@app.route("/image", methods=["POST"])
 def image():
     if request.headers.get('X-API-Key') != app.config["KEY"]:
         return jsonify({'error': 'api key not given or invalid'}), 401

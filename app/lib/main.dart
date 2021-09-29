@@ -1,5 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:app/pages/sensor.dart';
 import 'package:app/pages/view.dart';
+import 'package:app/pages/view_image.dart';
 import 'package:flutter/material.dart';
 import 'package:app/pages/home.dart';
 
@@ -16,6 +19,7 @@ Future<void> main() async {
             capture: [],
           ),
       '/sensor': (context) => const Sensor(),
+      '/view_image': (context) => ViewImage(data: Uint8List(0)),
     },
   ));
 }

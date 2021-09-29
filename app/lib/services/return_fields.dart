@@ -10,6 +10,7 @@ abstract class ReturnFields {
   ReturnFields({required this.type});
 
   static final url = Uri.parse('https://kf34.herokuapp.com/graphql');
+  static final urlImage = Uri.parse('https://kf34.herokuapp.com/image');
   static Map<String, String> headers = {
     "X-API-Key": key,
     "Content-Type": "application/json",

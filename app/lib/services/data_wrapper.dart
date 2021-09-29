@@ -1,6 +1,7 @@
 import 'package:app/services/avg_result.dart';
 import 'package:app/services/data_result.dart';
 import 'package:app/services/device_type.dart';
+import 'package:app/services/image_graph.dart';
 import 'package:app/services/max_min_result.dart';
 import 'package:app/services/return_fields.dart';
 
@@ -8,6 +9,7 @@ class DataWrapper extends ReturnFields {
   late MaxMinResult max, min, maxToday, minToday;
   late AvgResult avg, avgToday;
   late DataResult today, latest;
+  late ImageGraph imageGraph;
 
   DataWrapper({required type}) : super(type: type) {
     max = MaxMinResult(type: type);
@@ -20,6 +22,7 @@ class DataWrapper extends ReturnFields {
 
     today = DataResult(type: type);
     latest = DataResult(type: type);
+    imageGraph = ImageGraph(type: type);
   }
 
   String symbol() {
@@ -37,6 +40,7 @@ class DataWrapper extends ReturnFields {
         avgToday.getAverageToday(),
         today.getToday(),
         latest.getLatest(),
+        imageGraph.getData(),
       ]);
       success = true;
     } catch (e) {

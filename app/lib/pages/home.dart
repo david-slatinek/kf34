@@ -1,7 +1,9 @@
 import 'package:app/pages/sensor.dart';
 import 'package:app/pages/view.dart';
+import 'package:app/pages/view_image.dart';
 import 'package:app/services/data_wrapper.dart';
 import 'package:app/services/device_type.dart';
+import 'package:app/services/image_graph.dart';
 import 'package:app/services/return_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -147,19 +149,28 @@ class _HomeState extends State<Home> {
         buildDivider(),
         buildCard(
             text: 'All today\'s values',
-            value: data.today.data.isNotEmpty ? data.today.data[0].value : -999,
-            capture: data.today.data.map((e) => e.capture).toList(),
+            value: data.today.data.isNotEmpty
+                ? data.today.data[data.today.data.length - 1].value
+                : -999,
+            capture: data.today.data
+                .map((e) =>
+                    e.value.toString() +
+                    '${data.symbol()}  ' +
+                    e.capture.split(' ').last)
+                .toList(),
             addViewButton: true),
         buildDivider(),
         buildCard(
             text: 'Max today',
             value: data.maxToday.data,
-            capture: data.maxToday.captured),
+            capture:
+                data.maxToday.captured.map((e) => e.split(' ').last).toList()),
         buildDivider(),
         buildCard(
             text: 'Min today',
             value: data.minToday.data,
-            capture: data.minToday.captured),
+            capture:
+                data.minToday.captured.map((e) => e.split(' ').last).toList()),
         buildDivider(),
         buildCard(
             text: 'Absolute max',
@@ -199,6 +210,24 @@ class _HomeState extends State<Home> {
         appBar: AppBar(
           actions: [
             IconButton(
+              tooltip: 'View graph',
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ViewImage(data: data.imageGraph.image),
+                    ));
+              },
+              icon: const Icon(
+                Icons.image,
+                size: 30,
+              ),
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            IconButton(
                 tooltip: 'Choose sensor type',
                 onPressed: () async {
                   dynamic result = await Navigator.push(
@@ -216,7 +245,7 @@ class _HomeState extends State<Home> {
                 icon: const Icon(
                   Icons.menu,
                   size: 30,
-                ))
+                )),
           ],
           leading: const Icon(
             Icons.house_outlined,
@@ -267,9 +296,13 @@ class _HomeState extends State<Home> {
     );
   }
 
+  Future<String> getKey() async {
+    return await const FlutterSecureStorage().read(key: 'key') ?? '401';
+  }
+
   Future<bool> _isServerOnline() async {
-    ReturnFields.key =
-        await const FlutterSecureStorage().read(key: 'key') ?? '401';
+    ReturnFields.key = await getKey();
+    ImageGraph.imageHeaders['X-API-Key'] = await getKey();
 
     try {
       Response response = await get(ReturnFields.url);
