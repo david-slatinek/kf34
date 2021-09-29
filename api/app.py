@@ -11,7 +11,8 @@ from queries import (resolve_get_average, resolve_get_average_between,
                      resolve_get_latest, resolve_get_max,
                      resolve_get_max_between, resolve_get_max_today,
                      resolve_get_min, resolve_get_min_between,
-                     resolve_get_min_today, resolve_get_today)
+                     resolve_get_min_today, resolve_get_today,
+                     resolve_get_today_graph)
 
 query = ObjectType("Query")
 query.set_field("getMax", resolve_get_max)
@@ -20,6 +21,7 @@ query.set_field("getAverage", resolve_get_average)
 
 query.set_field("getToday", resolve_get_today)
 query.set_field("getLatest", resolve_get_latest)
+query.set_field("getTodayGraph", resolve_get_today_graph)
 
 query.set_field("getBetween", resolve_get_between)
 

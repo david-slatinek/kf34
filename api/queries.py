@@ -1,4 +1,9 @@
+import base64
+import decimal
+import io
 from datetime import date, datetime
+
+from matplotlib import pyplot as plt
 
 from __init__ import Session
 from models import Data
@@ -138,6 +143,43 @@ def resolve_get_today(obj, info, device_type):
             AND device.device_type = :device_type
             ORDER BY data.capture;
         """, {'today': str(date.today()), 'device_type': device_type})
+
+
+def resolve_get_today_graph(obj, info, device_type):
+    payload = resolve_get_today(obj, info, device_type)
+    try:
+        if payload["success"]:
+            data = payload["data"]
+            captures, values = [], []
+            for d in data:
+                captures.append(d["capture"].strftime("%H:%M"))
+                values.append(d["value"])
+
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
+            plt.plot(captures, values, marker='o')
+            for i, j in zip(captures, values):
+                ax.annotate(str(j), xy=(i, j + decimal.Decimal(0.1)))
+
+            plt.title('Today\'s values')
+            plt.xlabel('Capture time')
+            plt.ylabel(device_type)
+            plt.grid(True)
+
+            string_bytes = io.BytesIO()
+            plt.savefig(string_bytes, format='jpg')
+            string_bytes.seek(0)
+            image = base64.b64encode(string_bytes.read())
+
+            return {
+                "success": True,
+                "image": image.decode('utf-8')
+            }
+    except Exception as error:
+        return {
+            "success": False,
+            "error": str(error)
+        }
 
 
 def resolve_get_latest(obj, info, device_type):

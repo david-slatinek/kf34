@@ -44,6 +44,12 @@ enum DeviceType {
     HUMIDITY
 }
 
+type ImageResult implements ReturnFields {
+    success: Boolean!
+    error: String
+    image: String
+}
+
 type Query {
     getMax(device_type: DeviceType!): MaxMinResult!
     getMin(device_type: DeviceType!): MaxMinResult!
@@ -51,6 +57,7 @@ type Query {
 
     getToday(device_type: DeviceType!): DataResult!
     getLatest(device_type: DeviceType!): DataResult!
+    getTodayGraph(device_type: DeviceType!) : ImageResult!
 
     getBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): DataResult!
 

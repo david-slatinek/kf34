@@ -1,5 +1,6 @@
 ariadne==0.13.0
 click==8.0.1
+cycler==0.10.0
 Flask==2.0.1
 Flask-SQLAlchemy==2.5.1
 graphql-core==3.1.6
@@ -8,9 +9,16 @@ gunicorn==20.1.0
 isort==5.9.3
 itsdangerous==2.0.1
 Jinja2==3.0.1
+kiwisolver==1.3.2
 MarkupSafe==2.0.1
+matplotlib==3.4.3
+numpy==1.21.2
+Pillow==8.3.2
 psycopg2-binary==2.9.1
+pyparsing==2.4.7
+python-dateutil==2.8.2
 python-dotenv==0.19.0
+six==1.16.0
 SQLAlchemy==1.4.23
 starlette==0.14.2
 typing-extensions==3.10.0.2
