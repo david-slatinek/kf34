@@ -13,6 +13,7 @@ from queries import (get_today_graph, resolve_get_average,
                      resolve_get_average_between, resolve_get_average_today,
                      resolve_get_between, resolve_get_latest, resolve_get_max,
                      resolve_get_max_between, resolve_get_max_today,
+                     resolve_get_median_between, resolve_get_median_today,
                      resolve_get_min, resolve_get_min_between,
                      resolve_get_min_today, resolve_get_today)
 
@@ -28,6 +29,9 @@ query.set_field("getBetween", resolve_get_between)
 
 query.set_field("getAverageBetween", resolve_get_average_between)
 query.set_field("getAverageToday", resolve_get_average_today)
+
+query.set_field("getMedianBetween", resolve_get_median_between)
+query.set_field("getMedianToday", resolve_get_median_today)
 
 query.set_field("getMaxBetween", resolve_get_max_between)
 query.set_field("getMaxToday", resolve_get_max_today)
@@ -72,6 +76,7 @@ def image():
             def remove_file(response):
                 os.remove(file_id + '.jpg')
                 return response
+
             return send_file(file_id + '.jpg', mimetype='image/jpeg')
         except FileNotFoundError as error:
             jsonify({'error': str(error)}), 500

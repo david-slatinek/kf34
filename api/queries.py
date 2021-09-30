@@ -145,6 +145,21 @@ def resolve_get_today(obj, info, device_type):
         """, {'today': str(date.today()), 'device_type': device_type})
 
 
+def resolve_get_latest(obj, info, device_type):
+    return data_retrieve("""
+            SELECT data.*
+            FROM data
+            JOIN device
+            ON data.fk_device = device.id_device
+            WHERE data.capture =
+                (SELECT MAX(capture) FROM data
+                JOIN device
+                ON data.fk_device = device.id_device
+                WHERE device.device_type = :device_type)
+            AND device.device_type = :device_type;
+        """, {"device_type": device_type})
+
+
 def cm_to_inch(value):
     return value / 2.54
 
@@ -175,21 +190,6 @@ def get_today_graph(device_type, file_id):
         "success": False,
         "error": payload["error"]
     }
-
-
-def resolve_get_latest(obj, info, device_type):
-    return data_retrieve("""
-            SELECT data.*
-            FROM data
-            JOIN device
-            ON data.fk_device = device.id_device
-            WHERE data.capture =
-                (SELECT MAX(capture) FROM data
-                JOIN device
-                ON data.fk_device = device.id_device
-                WHERE device.device_type = :device_type)
-            AND device.device_type = :device_type;
-        """, {"device_type": device_type})
 
 
 def valid_date(input_date):
@@ -237,6 +237,28 @@ def resolve_get_average_between(obj, info, begin_date, end_date, device_type):
 
 def resolve_get_average_today(obj, info, device_type):
     return resolve_get_average_between(obj, info, str(date.today()), str(date.today()), device_type)
+
+
+def resolve_get_median_between(obj, info, begin_date, end_date, device_type):
+    if not valid_date(begin_date) or not valid_date(end_date):
+        return {
+            "success": False,
+            "error": "invalid date format; should be YYYY-MM-DD"
+        }
+
+    return average_data_retrieve("""
+            SELECT PERCENTILE_CONT(0.5)
+            WITHIN GROUP(ORDER BY value)
+            FROM data
+            JOIN device
+            ON data.fk_device = device.id_device
+            WHERE CAST(data.capture AS DATE) BETWEEN :begin_date AND :end_date
+            AND device.device_type = :device_type;
+           """, {"begin_date": begin_date, "end_date": end_date, "device_type": device_type})
+
+
+def resolve_get_median_today(obj, info, device_type):
+    return resolve_get_median_between(obj, info, str(date.today()), str(date.today()), device_type)
 
 
 def resolve_get_max_between(obj, info, begin_date, end_date, device_type):
