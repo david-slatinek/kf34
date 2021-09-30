@@ -67,6 +67,9 @@ type Query {
     getMedianBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): AvgResult!
     getMedianToday(device_type: DeviceType!) : AvgResult!
 
+    getStandardDeviationBetween(begin_date: String!, end_date: String!, device_type: DeviceType!) : AvgResult!
+    getStandardDeviationToday(device_type: DeviceType!) : AvgResult!
+
     getMaxBetween(begin_date: String!, end_date: String!, device_type: DeviceType!): MaxMinResult!
     getMaxToday(device_type: DeviceType!): MaxMinResult!
 

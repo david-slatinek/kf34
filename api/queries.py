@@ -1,7 +1,5 @@
-import base64
-import decimal
-import io
 from datetime import date, datetime
+from statistics import pstdev
 
 from matplotlib import pyplot as plt
 
@@ -184,7 +182,7 @@ def get_today_graph(device_type, file_id):
         plt.grid(True)
         plt.savefig(file_id + '.jpg')
         return {
-            "success": True,
+            "success": True
         }
     return {
         "success": False,
@@ -248,7 +246,7 @@ def resolve_get_median_between(obj, info, begin_date, end_date, device_type):
 
     return average_data_retrieve("""
             SELECT PERCENTILE_CONT(0.5)
-            WITHIN GROUP(ORDER BY value)
+            WITHIN GROUP(ORDER BY data.value)
             FROM data
             JOIN device
             ON data.fk_device = device.id_device
@@ -259,6 +257,43 @@ def resolve_get_median_between(obj, info, begin_date, end_date, device_type):
 
 def resolve_get_median_today(obj, info, device_type):
     return resolve_get_median_between(obj, info, str(date.today()), str(date.today()), device_type)
+
+
+def resolve_get_standard_deviation_between(obj, info, begin_date, end_date, device_type):
+    if not valid_date(begin_date) or not valid_date(end_date):
+        return {
+            "success": False,
+            "error": "invalid date format; should be YYYY-MM-DD"
+        }
+
+    try:
+        with Session() as session:
+            result = session.execute("""
+                SELECT data.value
+                FROM data
+                JOIN device
+                ON data.fk_device = device.id_device
+                WHERE CAST(data.capture AS DATE) BETWEEN :begin_date AND :end_date
+                AND device.device_type = :device_type;
+            """, {"begin_date": begin_date, "end_date": end_date, "device_type": device_type})
+            session.commit()
+
+            values = [r["value"] for r in result]
+
+            payload = {
+                "success": True,
+                "data": round(pstdev(values), 2)
+            }
+    except Exception as error:
+        payload = {
+            "success": False,
+            "error": str(error)
+        }
+    return payload
+
+
+def resolve_resolve_get_standard_deviation_today(obj, info, device_type):
+    return resolve_get_standard_deviation_between(obj, info, str(date.today()), str(date.today()), device_type)
 
 
 def resolve_get_max_between(obj, info, begin_date, end_date, device_type):

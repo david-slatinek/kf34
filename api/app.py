@@ -15,7 +15,9 @@ from queries import (get_today_graph, resolve_get_average,
                      resolve_get_max_between, resolve_get_max_today,
                      resolve_get_median_between, resolve_get_median_today,
                      resolve_get_min, resolve_get_min_between,
-                     resolve_get_min_today, resolve_get_today)
+                     resolve_get_min_today,
+                     resolve_get_standard_deviation_between, resolve_get_today,
+                     resolve_resolve_get_standard_deviation_today)
 
 query = ObjectType("Query")
 query.set_field("getMax", resolve_get_max)
@@ -32,6 +34,9 @@ query.set_field("getAverageToday", resolve_get_average_today)
 
 query.set_field("getMedianBetween", resolve_get_median_between)
 query.set_field("getMedianToday", resolve_get_median_today)
+
+query.set_field("getStandardDeviationBetween", resolve_get_standard_deviation_between)
+query.set_field("getStandardDeviationToday", resolve_resolve_get_standard_deviation_today)
 
 query.set_field("getMaxBetween", resolve_get_max_between)
 query.set_field("getMaxToday", resolve_get_max_today)
