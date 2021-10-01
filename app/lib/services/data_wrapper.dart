@@ -7,7 +7,7 @@ import 'package:app/services/return_fields.dart';
 
 class DataWrapper extends ReturnFields {
   late MaxMinResult max, min, maxToday, minToday;
-  late AvgResult avg, avgToday;
+  late AvgResult avgToday, medianToday, stDeviationToday;
   late DataResult today, latest;
   late ImageGraph imageGraph;
 
@@ -17,8 +17,9 @@ class DataWrapper extends ReturnFields {
     maxToday = MaxMinResult(type: type);
     minToday = MaxMinResult(type: type);
 
-    avg = AvgResult(type: type);
     avgToday = AvgResult(type: type);
+    medianToday = AvgResult(type: type);
+    stDeviationToday = AvgResult(type: type);
 
     today = DataResult(type: type);
     latest = DataResult(type: type);
@@ -36,8 +37,9 @@ class DataWrapper extends ReturnFields {
         min.getMin(),
         maxToday.getMaxToday(),
         minToday.getMinToday(),
-        avg.getAverage(),
         avgToday.getAverageToday(),
+        medianToday.getMedianToday(),
+        stDeviationToday.getStandardDeviationToday(),
         today.getToday(),
         latest.getLatest(),
         imageGraph.getData(),

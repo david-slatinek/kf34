@@ -123,6 +123,10 @@ class _HomeState extends State<Home> {
     );
   }
 
+  List<String> getCaptures(List<String> data) {
+    return List<String>.from(data.map((e) => e.split(' ').last).toList());
+  }
+
   Widget homeScreenWidgets() {
     if (!data.latest.success) {
       return infoWidget('Error: ${data.latest.error}', Icons.error);
@@ -148,6 +152,18 @@ class _HomeState extends State<Home> {
             addViewButton: false),
         buildDivider(),
         buildCard(
+            text: 'Today\'s median',
+            value: data.medianToday.data,
+            capture: [],
+            addViewButton: false),
+        buildDivider(),
+        buildCard(
+            text: 'Today\'s std deviation',
+            value: data.stDeviationToday.data,
+            capture: [],
+            addViewButton: false),
+        buildDivider(),
+        buildCard(
             text: 'All today\'s values',
             value: data.today.data.isNotEmpty
                 ? data.today.data[data.today.data.length - 1].value
@@ -157,20 +173,17 @@ class _HomeState extends State<Home> {
                     e.value.toString() +
                     '${data.symbol()}  ' +
                     e.capture.split(' ').last)
-                .toList(),
-            addViewButton: true),
+                .toList()),
         buildDivider(),
         buildCard(
             text: 'Max today',
             value: data.maxToday.data,
-            capture:
-                data.maxToday.captured.map((e) => e.split(' ').last).toList()),
+            capture: getCaptures(data.maxToday.captured)),
         buildDivider(),
         buildCard(
             text: 'Min today',
             value: data.minToday.data,
-            capture:
-                data.minToday.captured.map((e) => e.split(' ').last).toList()),
+            capture: getCaptures(data.minToday.captured)),
         buildDivider(),
         buildCard(
             text: 'Absolute max',

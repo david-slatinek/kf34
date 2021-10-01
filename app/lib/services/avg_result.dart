@@ -32,7 +32,7 @@ class AvgResult extends ReturnFields {
         Map mapData = jsonDecode(response.body);
         success = mapData['data'][method]['success'];
         error = mapData['data'][method]['error'];
-        data = mapData['data'][method]['data'] ?? -999;
+        data = mapData['data'][method]['data'];
       } else {
         throw Exception('Error code: ' + response.statusCode.toString());
       }
@@ -45,6 +45,10 @@ class AvgResult extends ReturnFields {
   Future<void> getAverage() async => _getData('getAverage');
 
   Future<void> getAverageToday() async => _getData('getAverageToday');
+
+  Future<void> getMedianToday() async => _getData('getMedianToday');
+
+  Future<void> getStandardDeviationToday() async => _getData('getStandardDeviationToday');
 
   @override
   String toString() {
