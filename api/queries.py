@@ -110,7 +110,7 @@ def average_data_retrieve(query, params):
 
             payload = {
                 "success": True,
-                "data": data
+                "data": round(data, 2)
             }
     except Exception as error:
         payload = {
