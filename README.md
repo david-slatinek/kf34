@@ -7,6 +7,7 @@
 - [Arduino](#arduino)
 - [Database](#database)
 - [API](#api)
+- [App](#app)
 
 # About
 A smart home system with Raspberry Pi, Arduino, PostgreSQL, Docker, Flask, GraphQL, and Flutter.
@@ -103,3 +104,13 @@ def graphql_server():
     )
     return jsonify(result), 200 if success else 400
 ```
+
+# App
+<div align="center">
+  <img alt="Flutter" src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white"/>
+  <img alt="Dart" src="https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white"/>
+</div>
+
+The mobile app was made with Flutter and Dart. The main app functionality is getting data from the API and displaying it.
+
+The app features the latest, average, median, standard deviation, all today's values along with maximum and minimum values. It also includes a graph with all today's values.
