@@ -13,15 +13,15 @@ void setup() {
     Serial.println("Could not find a valid BMP280 sensor, check wiring!");
     delay(1000);
   }
-  Serial.println("Sensor found!");
 }
 
 void loop() {
-  float pressure = bmp280.readPressure();
+  if (Serial.available() > 0) {
+    String data = Serial.readStringUntil('\n');
 
-  Serial.print("Pressure    = ");
-  Serial.print(pressure / 100);
-  Serial.println(" hPa\n");
-
-  delay(1000);
+    if (data == "get") {
+      float pressure = bmp280.readPressure();
+      Serial.println(pressure / 100);
+    }
+  }
 }
