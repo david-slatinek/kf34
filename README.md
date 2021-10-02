@@ -6,6 +6,7 @@
 - [Raspberry Pi](#raspberry-pi)
 - [Arduino](#arduino)
 - [Database](#database)
+- [API](#api)
 
 # About
 A smart home system with Raspberry Pi, Arduino, PostgreSQL, Docker, Flask, GraphQL, and Flutter.
@@ -25,7 +26,17 @@ Project infrastructure:
   <img alt="Python" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
 </div>
 
-Raspberry Pi is responsible to get data from the DHT22 sensor (temperature, humidity) every 15 minutes - by using **cron**. It also gets data from Arduino. After that, it uploads data to the API. In case of errors, the LED and buzzer are turned on. In addition to that, Raspberry Pi also sends an email, and thus notifying the system admin about the occurred error with the following syntax:
+Raspberry Pi is responsible to get data from the DHT22 sensor (temperature, humidity) every 15 minutes - by using **cron**. It also gets data from Arduino. After that, it uploads data to the API by calling an appropriate mutation:
+```
+mutation AddData($value: Float!, $device_type: DeviceType!) {
+    addData(value: $value, device_type: $device_type) {
+        success
+        error
+    }
+}
+```
+
+In case of errors, the LED and buzzer are turned on. In addition to that, Raspberry Pi also sends an email, and thus notifying the system admin about the occurred error with the following syntax:
 ```
 Sensor: DHT22
 Error: <error>
@@ -57,3 +68,38 @@ ER diagram can be seen from the following image:
 <div align="center">
   <img alt="ER diagram" src="images/er.png"/>
 </div>
+
+# API
+<div align="center">
+  <img alt="Docker" src="https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white"/>
+  <img alt="Shell Script" src="https://img.shields.io/badge/shell_script-%23121011.svg?style=for-the-badge&logo=gnu-bash&logoColor=white"/>
+  <img alt="Heroku" src="https://img.shields.io/badge/heroku-%23430098.svg?style=for-the-badge&logo=heroku&logoColor=white"/>
+  <img alt="Bash" src="https://img.shields.io/badge/GNU%20Bash-4EAA25?style=for-the-badge&logo=GNU%20Bash&logoColor=white"/>
+  <img alt="Python" src="https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=darkgreen"/>
+  <img alt="Flask" src="https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white"/>
+ <img alt="JSON" src="https://img.shields.io/badge/JSON-000000?style=for-the-badge&logo=JSON&logoColor=white"/>
+ <img alt="JSON" src="https://img.shields.io/badge/GraphQl-E10098?style=for-the-badge&logo=graphql&logoColor=white"/>
+ <img alt="JSON" src="https://img.shields.io/badge/curl-073551?style=for-the-badge&logo=curl&logoColor=white"/>
+ <img alt="Postman" src="https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=red"/>
+</div>
+
+The API was made with a python framework **flask** with Graphql and returns data in JSON format. The API is hosted on Heroku, and it's running inside a docker container. To make the API production-ready, we used the **gunicorn** server.
+
+To prevent unauthorized access, we use API keys along with the HTTPS protocol - provided by Heroku.
+
+Main route:
+```python
+@app.route("/graphql", methods=["POST"])
+def graphql_server():
+    if request.headers.get('X-API-Key') != app.config["KEY"]:
+        return jsonify({'error': 'api key not given or invalid'}), 401
+
+    data = request.get_json()
+    success, result = graphql_sync(
+        schema,
+        data,
+        context_value=request,
+        debug=app.debug
+    )
+    return jsonify(result), 200 if success else 400
+```
