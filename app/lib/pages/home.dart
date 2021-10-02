@@ -41,7 +41,7 @@ class _HomeState extends State<Home> {
                   children: [
                     Text(
                       text,
-                      style: const TextStyle(color: Colors.black, fontSize: 20),
+                      style: const TextStyle(color: Colors.black, fontSize: 18),
                     ),
                     if (addViewButton)
                       OutlinedButton.icon(
@@ -70,7 +70,7 @@ class _HomeState extends State<Home> {
                 Text(
                   value.toString() + data.symbol(),
                   style: const TextStyle(
-                      fontSize: 40,
+                      fontSize: 35,
                       color: Colors.black,
                       fontWeight: FontWeight.bold),
                 ),
@@ -167,7 +167,7 @@ class _HomeState extends State<Home> {
             text: 'All today\'s values',
             value: data.today.data.isNotEmpty
                 ? data.today.data[data.today.data.length - 1].value
-                : -999,
+                : -99,
             capture: data.today.data
                 .map((e) =>
                     e.value.toString() +

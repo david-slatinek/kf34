@@ -1,10 +1,10 @@
 import 'package:app/services/return_fields.dart';
 
 class Data {
-  int idData = -999;
+  int idData = -99;
   String capture = '';
-  double value = -999;
-  int? fkDevice = -999;
+  double value = -99;
+  int? fkDevice = -99;
 
   Data(
       {required this.idData,

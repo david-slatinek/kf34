@@ -5,7 +5,7 @@ import 'package:app/services/return_fields.dart';
 import 'package:app/services/device_type.dart';
 
 class MaxMinResult extends ReturnFields {
-  double data = -999;
+  double data = -99;
   List<String> captured = [];
 
   MaxMinResult({required DeviceType type}) : super(type: type);
@@ -34,7 +34,7 @@ class MaxMinResult extends ReturnFields {
         Map mapData = jsonDecode(response.body);
         success = mapData['data'][method]['success'];
         error = mapData['data'][method]['error'];
-        data = mapData['data'][method]['data'] ?? -999;
+        data = mapData['data'][method]['data'];
         if (mapData['data'][method]['captured'] != null) {
           for (String s in mapData['data'][method]['captured']) {
             captured.add(ReturnFields.formatDate(s));

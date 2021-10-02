@@ -56,6 +56,7 @@ schema = make_executable_schema(
 class DeviceType(Enum):
     TEMPERATURE = 0
     HUMIDITY = 1
+    PRESSURE = 2
 
 
 @app.errorhandler(404)

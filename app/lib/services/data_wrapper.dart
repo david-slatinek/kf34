@@ -27,7 +27,14 @@ class DataWrapper extends ReturnFields {
   }
 
   String symbol() {
-    return type == DeviceType.TEMPERATURE ? '°C' : '%';
+    switch (type) {
+      case DeviceType.TEMPERATURE:
+        return '°C';
+      case DeviceType.HUMIDITY:
+        return '%';
+      case DeviceType.PRESSURE:
+        return 'hPa';
+    }
   }
 
   Future<void> getData() async {

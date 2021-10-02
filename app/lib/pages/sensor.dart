@@ -6,10 +6,15 @@ class Sensor extends StatelessWidget {
 
   static const List<DeviceType> sensors = [
     DeviceType.TEMPERATURE,
-    DeviceType.HUMIDITY
+    DeviceType.HUMIDITY,
+    DeviceType.PRESSURE,
   ];
 
-  static const List<IconData> icons = [Icons.device_thermostat, Icons.air];
+  static const List<IconData> icons = [
+    Icons.thermostat,
+    Icons.water,
+    Icons.air,
+  ];
 
   @override
   Widget build(BuildContext context) {

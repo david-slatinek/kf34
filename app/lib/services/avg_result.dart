@@ -5,7 +5,7 @@ import 'package:app/services/return_fields.dart';
 import 'package:http/http.dart';
 
 class AvgResult extends ReturnFields {
-  double data = -999;
+  double data = -99;
 
   AvgResult({required DeviceType type}) : super(type: type);
 
