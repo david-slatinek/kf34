@@ -6,8 +6,7 @@ email="email"
   echo "From: ${email}"
   echo "To: ${email}"
   echo -e "Subject: Raspberry Pi sensor error\n"
-  echo "Sensor: $1"
-  echo "Error: $2"
+  echo "Error: $1"
   echo "Date: $(date +'%d.%m.%Y %T')"
 } >>content_email.txt
 

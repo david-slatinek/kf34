@@ -24,7 +24,7 @@ class DeviceType(Enum):
 def handle_error(err):
     logging.error(err)
     subprocess.Popen(["./led_buzzer.py", "-e"])
-    subprocess.Popen(["./email.sh", "DHT22", err])
+    subprocess.Popen(["./email.sh", err])
 
 
 def upload(value, device_type):
@@ -62,7 +62,7 @@ if __name__ == "__main__":
         upload(humidity, DeviceType.HUMIDITY.name)
         
         ser.write(b"get\n")
-        pressure = ser.readline().decode("utf-8").rstrip()
+        pressure = float(ser.readline().decode("utf-8").rstrip())
         upload(pressure, DeviceType.PRESSURE.name)
 
         print(f"Temperature: {temperature}C, humidity: {humidity}%")

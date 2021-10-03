@@ -39,7 +39,6 @@ mutation AddData($value: Float!, $device_type: DeviceType!) {
 
 In case of errors, the LED and buzzer are turned on. In addition to that, Raspberry Pi also sends an email, and thus notifying the system admin about the occurred error with the following syntax:
 ```
-Sensor: DHT22
 Error: <error>
 Date: <date of error>
 ```
