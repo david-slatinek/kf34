@@ -1,0 +1,2 @@
+0-59/15 7-18 * * * KEY="" <absolute path to script.sh>
+0 19 * * * KEY="" <absolute path to script.sh>

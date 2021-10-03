@@ -2,7 +2,7 @@
 #include <SPI.h>
 #include <Adafruit_BMP280.h>
 
-#define BMP280_ADDRESS  0x76
+#define BMP280_ADDRESS 0x76
 
 Adafruit_BMP280 bmp280;
 

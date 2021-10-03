@@ -54,4 +54,4 @@ curl "$URL" -s -o /dev/null --write-out '%{time_total}\n' \
 curl "$URL_IMAGE" -s -o /dev/null --write-out '%{time_total}\n' \
 -H "$HEADER" \
 -H "X-API-Key: $KEY" \
--d '{"device_type": "'$TYPE'"}'
+-d '{"device_type": "'"$TYPE"'"}'

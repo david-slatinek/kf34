@@ -1,4 +1,4 @@
-CREATE FUNCTION add_new_data(value DECIMAL(5, 2), d_type VARCHAR(50))
+CREATE FUNCTION add_new_data(value DECIMAL(6, 2), d_type VARCHAR(50))
 RETURNS BOOLEAN AS $$ 
 DECLARE id_fk INT;
 

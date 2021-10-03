@@ -4,5 +4,4 @@
 #heroku addons:create --app kf34 heroku-postgresql:hobby-dev
 #heroku pg:psql --app kf34 <db.sql
 #heroku pg:psql -a kf34 <function.sql
-#heroku -a kf34 config:add TZ='Europe/Ljubljana'
 #heroku pg:psql -a kf34

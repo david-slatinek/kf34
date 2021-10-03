@@ -5,5 +5,6 @@ Dockerfile
 .gitignore
 .idea
 __pycache__
+test.sh
 upload.sh
 venv
