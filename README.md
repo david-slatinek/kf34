@@ -1,4 +1,4 @@
-![Logo project](/images/logo.png)
+![Project logo](/images/logo.png)
 
 # Table of Contents
 - [Table of Contents](#table-of-contents)
@@ -13,7 +13,7 @@
 A smart home system with Raspberry Pi, Arduino, PostgreSQL, Docker, Flask, GraphQL, and Flutter.
 
 The project consists of 4 main components:
-- Capturing data from sensors using Raspberry Pi and Arduino
+- Capturing data from the sensors using Raspberry Pi and Arduino
 - Database for data storage
 - API for storing and retrieving data
 - Mobile app for displaying values 
@@ -27,7 +27,7 @@ Project infrastructure:
   <img alt="Python" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
 </div>
 
-Raspberry Pi is responsible to get data from the DHT22 sensor (temperature, humidity) every 15 minutes - by using **cron**. It also gets data from Arduino. After that, it uploads data to the API by calling an appropriate mutation:
+Raspberry Pi is responsible to get the data from the DHT22 sensor (temperature, humidity) every 15 minutes - by using **cron**. It also gets data from Arduino. After that, it uploads data to the API by calling an appropriate mutation:
 ```
 mutation AddData($value: Float!, $device_type: DeviceType!) {
     addData(value: $value, device_type: $device_type) {
@@ -37,7 +37,7 @@ mutation AddData($value: Float!, $device_type: DeviceType!) {
 }
 ```
 
-In case of errors, the LED and buzzer are turned on. In addition to that, Raspberry Pi also sends an email, and thus notifying the system admin about the occurred error with the following syntax:
+In case of errors, the LED and buzzer are turned on. In addition to that, Raspberry Pi also sends an email, and thus notifies the system admin about the occurred error with the following syntax:
 ```
 Error: <error>
 Date: <date of error>
@@ -62,7 +62,7 @@ Sensor schematic:
   <img alt="diagrams.net" src="https://img.shields.io/badge/diagrams.net-F08705?style=for-the-badge&logo=diagrams.net&logoColor=white"/>
 </div>
 
-For the relational database management system, we choose Postgresql. In the database, we are storing information about the device and data capture.
+For the relational database management system, we choose PostgreSQL. In the database, we are storing information about the device and data capture.
 
 ER diagram can be seen from the following image:
 <div align="center">
@@ -78,16 +78,16 @@ ER diagram can be seen from the following image:
   <img alt="Python" src="https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=darkgreen"/>
   <img alt="Flask" src="https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white"/>
  <img alt="JSON" src="https://img.shields.io/badge/JSON-000000?style=for-the-badge&logo=JSON&logoColor=white"/>
- <img alt="JSON" src="https://img.shields.io/badge/GraphQl-E10098?style=for-the-badge&logo=graphql&logoColor=white"/>
- <img alt="JSON" src="https://img.shields.io/badge/curl-073551?style=for-the-badge&logo=curl&logoColor=white"/>
+ <img alt="GraphQL" src="https://img.shields.io/badge/GraphQl-E10098?style=for-the-badge&logo=graphql&logoColor=white"/>
+ <img alt="Curl" src="https://img.shields.io/badge/curl-073551?style=for-the-badge&logo=curl&logoColor=white"/>
  <img alt="Postman" src="https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=red"/>
 </div>
 
-The API was made with a python framework **flask** with Graphql and returns data in JSON format. The API is hosted on Heroku, and it's running inside a docker container. To make the API production-ready, we used the **gunicorn** server.
+The API was made with a python framework **flask** with GraphQL and returns data in JSON format. The API is hosted on Heroku, and it's running inside a docker container. To make the API production-ready, we used the **gunicorn** server.
 
 To prevent unauthorized access, we use API keys along with the HTTPS protocol - provided by Heroku.
 
-Main route:
+Main method:
 ```python
 @app.route("/graphql", methods=["POST"])
 def graphql_server():
@@ -117,7 +117,7 @@ The app features the latest, average, median, standard deviation, all today's va
 <div align="center">
   <img alt="App main screen 1" src="images/app-image-1.png" height=620 width=300/>
   <img alt="App main screen 2" src="images/app-image-2.png" height=620 width=300/>
-  <img alt="Today's capture dates" src="images/app-image-3.png" height=620 width=300/>
+  <img alt="Today's capture dates with value" src="images/app-image-3.png" height=620 width=300/>
   <img alt="Capture dates" src="images/app-image-4.png" height=620 width=300/>
   <img alt="Graph" src="images/app-image-5.png" />
   <img alt="Capture dates" src="images/app-image-6.png" height=380 width=330/>
