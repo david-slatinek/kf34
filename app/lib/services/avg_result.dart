@@ -29,9 +29,4 @@ class AvgResult extends ReturnFields {
 
   String getStandardDeviationToday() =>
       _generateQuery('getStandardDeviationToday');
-
-  @override
-  String toString() {
-    return super.toString() + '\nAvgResult{data: $data}';
-  }
 }
