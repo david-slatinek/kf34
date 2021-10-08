@@ -128,8 +128,8 @@ class _HomeState extends State<Home> {
   }
 
   Widget homeScreenWidgets() {
-    if (!data.latest.success) {
-      return infoWidget('Error: ${data.latest.error}', Icons.error);
+    if (!data.success) {
+      return infoWidget('Error: ${data.error}', Icons.error);
     }
 
     return ListView(
