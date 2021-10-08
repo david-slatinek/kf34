@@ -114,14 +114,8 @@ The mobile app was made with Flutter and Dart. The main app functionality is get
 
 The app features the latest, average, median, standard deviation, all today's values along with maximum and minimum values. It also includes a graph with all today's values.
 
+More images are available [here](/images).
+
 <div align="center">
-  <img alt="App main screen 1" src="images/app-image-1.png" height=620 width=300/>
-  <img alt="App main screen 2" src="images/app-image-2.png" height=620 width=300/>
-  <img alt="Today's capture dates with value" src="images/app-image-3.png" height=620 width=300/>
-  <img alt="Capture dates" src="images/app-image-4.png" height=620 width=300/>
-  <img alt="Graph" src="images/app-image-5.png" />
-  <img alt="Capture dates" src="images/app-image-6.png" height=380 width=330/>
-  <img alt="Available sensor types" src="images/app-image-7.png"  height=380 width=330/>
-  <img alt="Humidity data displayed" src="images/app-image-8.png" height=620 width=300/>
-  <img alt="Air pressure data displayed" src="images/app-image-9.png" height=620 width=300/>
+  <img alt="App video" src="images/app.gif"/>
 </div>
