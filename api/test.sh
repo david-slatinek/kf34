@@ -55,3 +55,10 @@ curl "$URL_IMAGE" -s -o /dev/null --write-out '%{time_total}\n' \
 -H "$HEADER" \
 -H "X-API-Key: $KEY" \
 -d '{"device_type": "'"$TYPE"'"}'
+
+echo
+
+curl "$URL" -s -o /dev/null --write-out '%{time_total}\n' \
+-H "$HEADER" \
+-H "X-API-Key: $KEY" \
+-d '{"query":"query GetAll { getMax(device_type: '"$TYPE"') { success error data captured } getMin(device_type: '"$TYPE"') { success error data captured } getMaxToday(device_type: '"$TYPE"') { success error data captured } getMinToday(device_type: '"$TYPE"') { success error data captured } getAverageToday(device_type: '"$TYPE"') { success error data } getMedianToday(device_type: '"$TYPE"') { success error data }  getStandardDeviationToday(device_type: '"$TYPE"') { success error data } getToday(device_type: '"$TYPE"') { success error data { id_data capture value fk_device } } getLatest(device_type: '"$TYPE"') { success error data { id_data capture value fk_device } } }" }'
