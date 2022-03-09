@@ -124,16 +124,13 @@ def pdf():
 
     if payload["success"]:
         try:
-            # @after_this_request
-            # def remove_file(response):
-            #     os.remove(file_id + '.pdf')
-            #     return response
+            @after_this_request
+            def remove_file(response):
+                os.remove(f'{file_id}.pdf')
+                os.remove(f'{file_id}.html')
+                return response
 
-            return {
-                "success": True
-            }
-
-            # return send_file(file_id + '.pdf', mimetype='application/pdf')
+            return send_file(f'{file_id}.pdf', mimetype='application/pdf')
         except FileNotFoundError as error:
             return jsonify({'error': str(error), 'success': False}), 500
     return payload, 400

@@ -1,12 +1,12 @@
 from datetime import date, datetime
 from statistics import pstdev
 
+import pdfkit
 from matplotlib import pyplot as plt
 
 from __init__ import Session
 from models import Data
-import pdfkit
-from flask import render_template, make_response
+from template import *
 
 
 def _to_dict(r):
@@ -357,21 +357,39 @@ def resolve_get_min_today(obj, info, device_type):
 
 
 def generate_pdf(file_id, begin_date, end_date, device_type):
-    # payload = resolve_get_between(None, None, begin_date, end_date, device_type)
+    payload = resolve_get_between(None, None, begin_date, end_date, device_type)
 
-    pdfkit.from_file("test.html", "out.pdf", options={"enable-local-file-access": None}, verbose=True)
+    if payload["success"]:
+        # result = f'{start}' \
+        #          f'<div>' \
+        #          f'<h2>Date: {date.today()}</h2>' \
+        #          f'<h3>Type: {device_type}</h3>' \
+        #          f'</div>' \
+        #          f'<br><br>' \
+        #          f'{table_start}'
 
+        result = start + '<div>' + '<h2>Date: ' + str(
+            date.today()) + '</h2> <h3>Type: ' + device_type + '</h3> </div> <br><br>' + table_start
+
+        # values = f'{values} <tr>' \
+        #          f'<td>{row.get("capture").strftime("%Y-%m-%d %H:%M")}</td>' \
+        #          f'<td>{row.get("value")}</td>' \
+        #          f'</tr>'
+
+        values = ''
+        for row in payload["data"]:
+            values = values + '<tr> <td>' + str(row.get("capture").strftime("%Y-%m-%d %H:%M")) + '</td> <td>' + str(
+                row.get("value")) + '</td> </tr>'
+
+        with open(f'{file_id}.html', 'w') as f:
+            f.write(f'{result} {values}')
+
+        pdfkit.from_file(f'{file_id}.html', f"{file_id}.pdf", options={"enable-local-file-access": None}, verbose=True)
+
+        return {
+            "success": True
+        }
     return {
-        "success": True
+        "success": False,
+        "error": payload["error"]
     }
-
-    # if payload["success"]:
-    #     print(payload["data"])
-    #
-    #     return {
-    #         "success": True
-    #     }
-    # return {
-    #     "success": False,
-    #     "error": payload["error"]
-    # }
