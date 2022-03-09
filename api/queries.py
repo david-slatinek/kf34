@@ -7,20 +7,20 @@ from __init__ import Session
 from models import Data
 
 
-def to_dict(r):
+def _to_dict(r):
     data = Data(r["value"], r["fk_device"])
     data.add_data(r["id_data"], r["capture"])
     return data.to_dict()
 
 
-def data_retrieve(query, params=None):
+def _data_retrieve(query, params=None):
     try:
         with Session() as session:
             result = session.execute(query, params)
             session.commit()
             payload = {
                 "success": True,
-                "data": [to_dict(r) for r in result]
+                "data": [_to_dict(r) for r in result]
             }
     except Exception as error:
         payload = {
@@ -30,7 +30,7 @@ def data_retrieve(query, params=None):
     return payload
 
 
-def central_value_result(query, params):
+def _central_value_result(query, params):
     try:
         with Session() as session:
             result = session.execute(query, params)
@@ -61,7 +61,7 @@ def central_value_result(query, params):
 
 
 def resolve_get_max(obj, info, device_type):
-    return central_value_result("""
+    return _central_value_result("""
                 SELECT data.*
                 FROM data
                 JOIN device
@@ -78,7 +78,7 @@ def resolve_get_max(obj, info, device_type):
 
 
 def resolve_get_min(obj, info, device_type):
-    return central_value_result("""
+    return _central_value_result("""
                 SELECT data.*
                 FROM data
                 JOIN device
@@ -94,7 +94,7 @@ def resolve_get_min(obj, info, device_type):
             """"", {'device_type': device_type})
 
 
-def average_data_retrieve(query, params):
+def _average_data_retrieve(query, params):
     try:
         with Session() as session:
             result = session.execute(query, params)
@@ -121,7 +121,7 @@ def average_data_retrieve(query, params):
 
 
 def resolve_get_average(obj, info, device_type):
-    return average_data_retrieve("""
+    return _average_data_retrieve("""
             SELECT ROUND(AVG(data.value), 2)
             FROM data
             JOIN device
@@ -132,7 +132,7 @@ def resolve_get_average(obj, info, device_type):
 
 
 def resolve_get_today(obj, info, device_type):
-    return data_retrieve("""
+    return _data_retrieve("""
             SELECT data.*
             FROM data
             JOIN device
@@ -144,7 +144,7 @@ def resolve_get_today(obj, info, device_type):
 
 
 def resolve_get_latest(obj, info, device_type):
-    return data_retrieve("""
+    return _data_retrieve("""
             SELECT data.*
             FROM data
             JOIN device
@@ -158,7 +158,7 @@ def resolve_get_latest(obj, info, device_type):
         """, {"device_type": device_type})
 
 
-def cm_to_inch(value):
+def _cm_to_inch(value):
     return value / 2.54
 
 
@@ -173,7 +173,7 @@ def get_today_graph(device_type, file_id):
 
         captures.reverse()
 
-        plt.figure(figsize=(cm_to_inch(65), cm_to_inch(10)))
+        plt.figure(figsize=(_cm_to_inch(65), _cm_to_inch(10)))
         plt.plot(captures, values, marker='o')
 
         plt.title('Today\'s values')
@@ -205,7 +205,7 @@ def resolve_get_between(obj, info, begin_date, end_date, device_type):
             "error": "invalid date format; should be YYYY-MM-DD"
         }
 
-    return data_retrieve("""
+    return _data_retrieve("""
             SELECT data.*
             FROM data
             JOIN device
@@ -223,7 +223,7 @@ def resolve_get_average_between(obj, info, begin_date, end_date, device_type):
             "error": "invalid date format; should be YYYY-MM-DD"
         }
 
-    return average_data_retrieve("""
+    return _average_data_retrieve("""
             SELECT ROUND(AVG(data.value), 2)
             FROM data
             JOIN device
@@ -244,7 +244,7 @@ def resolve_get_median_between(obj, info, begin_date, end_date, device_type):
             "error": "invalid date format; should be YYYY-MM-DD"
         }
 
-    return average_data_retrieve("""
+    return _average_data_retrieve("""
             SELECT PERCENTILE_CONT(0.5)
             WITHIN GROUP(ORDER BY data.value)
             FROM data
@@ -303,7 +303,7 @@ def resolve_get_max_between(obj, info, begin_date, end_date, device_type):
             "error": "invalid date format; should be YYYY-MM-DD"
         }
 
-    return central_value_result("""
+    return _central_value_result("""
             SELECT data.*
             FROM data
             JOIN device
@@ -332,7 +332,7 @@ def resolve_get_min_between(obj, info, begin_date, end_date, device_type):
             "error": "invalid date format; should be YYYY-MM-DD"
         }
 
-    return central_value_result("""
+    return _central_value_result("""
             SELECT data.*
             FROM data
             JOIN device
@@ -352,3 +352,16 @@ def resolve_get_min_between(obj, info, begin_date, end_date, device_type):
 
 def resolve_get_min_today(obj, info, device_type):
     return resolve_get_min_between(obj, info, str(date.today()), str(date.today()), device_type)
+
+
+def generate_pdf(file_id, begin_date, end_date, device_type):
+    payload = resolve_get_between(None, None, begin_date, end_date, device_type)
+
+    if payload["success"]:
+        return {
+            "success": True
+        }
+    return {
+        "success": False,
+        "error": payload["error"]
+    }

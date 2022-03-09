@@ -9,7 +9,7 @@ from flask import after_this_request, jsonify, request, send_file
 
 from __init__ import app
 from mutations import resolve_add_data
-from queries import (get_today_graph, resolve_get_average,
+from queries import (generate_pdf, get_today_graph, resolve_get_average,
                      resolve_get_average_between, resolve_get_average_today,
                      resolve_get_between, resolve_get_latest, resolve_get_max,
                      resolve_get_max_between, resolve_get_max_today,
@@ -17,7 +17,7 @@ from queries import (get_today_graph, resolve_get_average,
                      resolve_get_min, resolve_get_min_between,
                      resolve_get_min_today,
                      resolve_get_standard_deviation_between, resolve_get_today,
-                     resolve_resolve_get_standard_deviation_today)
+                     resolve_resolve_get_standard_deviation_today, valid_date)
 
 query = ObjectType("Query")
 query.set_field("getMax", resolve_get_max)
@@ -59,19 +59,27 @@ class DeviceType(Enum):
     PRESSURE = 2
 
 
+INVALID_KEY = jsonify({'error': 'api key not given or invalid', 'success': False}), 401
+
+
 @app.errorhandler(404)
 def page_not_found(e):
-    return jsonify({'error': 'not found'}), 404
+    return jsonify({'error': 'not found', 'success': False}), 404
+
+
+def valid():
+    return False if request.headers.get('X-API-Key') != app.config["KEY"] else True
 
 
 @app.route("/image", methods=["POST"])
 def image():
-    if request.headers.get('X-API-Key') != app.config["KEY"]:
-        return jsonify({'error': 'api key not given or invalid'}), 401
+    if not valid():
+        return INVALID_KEY
+
     data = request.get_json()
 
     if data['device_type'] not in [d.name for d in DeviceType]:
-        return jsonify({'error': 'device_type is not valid'}), 400
+        return jsonify({'error': 'device_type is not valid', 'success': False}), 400
 
     file_id = str(uuid.uuid4())
     payload = get_today_graph(data['device_type'], file_id)
@@ -85,7 +93,45 @@ def image():
 
             return send_file(file_id + '.jpg', mimetype='image/jpeg')
         except FileNotFoundError as error:
-            jsonify({'error': str(error)}), 500
+            return jsonify({'error': str(error), 'success': False}), 500
+    return payload, 400
+
+
+@app.route("/pdf", methods=["GET"])
+def image():
+    if not valid():
+        return INVALID_KEY
+
+    data = request.get_json()
+
+    if data['device_type'] not in [d.name for d in DeviceType]:
+        return jsonify({'error': 'device_type is not valid', 'success': False}), 400
+
+    if not data['begin_date']:
+        return jsonify({'error': 'begin_date is not specified', 'success': False}), 400
+
+    if not data['end_date']:
+        return jsonify({'error': 'end_date is not specified', 'success': False}), 400
+
+    if not valid_date(data['begin_date']) or not valid_date(data['end_date']):
+        return {
+            "success": False,
+            "error": "invalid date format; should be YYYY-MM-DD"
+        }
+
+    file_id = str(uuid.uuid4())
+    payload = generate_pdf(file_id, data['begin_date'], data['end_date'], data['device_type'])
+
+    if payload["success"]:
+        try:
+            # @after_this_request
+            # def remove_file(response):
+            #     os.remove(file_id + '.pdf')
+            #     return response
+
+            return send_file(file_id + '.pdf', mimetype='application/pdf')
+        except FileNotFoundError as error:
+            return jsonify({'error': str(error), 'success': False}), 500
     return payload, 400
 
 
