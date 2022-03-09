@@ -59,7 +59,7 @@ class DeviceType(Enum):
     PRESSURE = 2
 
 
-INVALID_KEY = jsonify({'error': 'api key not given or invalid', 'success': False}), 401
+INVALID_KEY = None
 
 
 @app.errorhandler(404)
@@ -98,7 +98,7 @@ def image():
 
 
 @app.route("/pdf", methods=["GET"])
-def image():
+def pdf():
     if not valid():
         return INVALID_KEY
 
@@ -129,7 +129,11 @@ def image():
             #     os.remove(file_id + '.pdf')
             #     return response
 
-            return send_file(file_id + '.pdf', mimetype='application/pdf')
+            return {
+                "success": True
+            }
+
+            # return send_file(file_id + '.pdf', mimetype='application/pdf')
         except FileNotFoundError as error:
             return jsonify({'error': str(error), 'success': False}), 500
     return payload, 400
@@ -151,4 +155,6 @@ def graphql_server():
 
 
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0', port=int(environ.get('PORT', 5000)))
+    with app.app_context():
+        INVALID_KEY = jsonify({'error': 'api key not given or invalid', 'success': False}), 401
+    app.run(debug=True, host='0.0.0.0', port=int(environ.get('PORT', 5000)))

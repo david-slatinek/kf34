@@ -5,6 +5,8 @@ from matplotlib import pyplot as plt
 
 from __init__ import Session
 from models import Data
+import pdfkit
+from flask import render_template, make_response
 
 
 def _to_dict(r):
@@ -355,13 +357,21 @@ def resolve_get_min_today(obj, info, device_type):
 
 
 def generate_pdf(file_id, begin_date, end_date, device_type):
-    payload = resolve_get_between(None, None, begin_date, end_date, device_type)
+    # payload = resolve_get_between(None, None, begin_date, end_date, device_type)
 
-    if payload["success"]:
-        return {
-            "success": True
-        }
+    pdfkit.from_file("test.html", "out.pdf", options={"enable-local-file-access": None}, verbose=True)
+
     return {
-        "success": False,
-        "error": payload["error"]
+        "success": True
     }
+
+    # if payload["success"]:
+    #     print(payload["data"])
+    #
+    #     return {
+    #         "success": True
+    #     }
+    # return {
+    #     "success": False,
+    #     "error": payload["error"]
+    # }
