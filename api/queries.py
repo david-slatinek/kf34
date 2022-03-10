@@ -360,21 +360,8 @@ def generate_pdf(file_id, begin_date, end_date, device_type):
     payload = resolve_get_between(None, None, begin_date, end_date, device_type)
 
     if payload["success"]:
-        # result = f'{start}' \
-        #          f'<div>' \
-        #          f'<h2>Date: {date.today()}</h2>' \
-        #          f'<h3>Type: {device_type}</h3>' \
-        #          f'</div>' \
-        #          f'<br><br>' \
-        #          f'{table_start}'
-
         result = start + '<div>' + '<h2>Date: ' + str(
             date.today()) + '</h2> <h3>Type: ' + device_type + '</h3> </div> <br><br>' + table_start
-
-        # values = f'{values} <tr>' \
-        #          f'<td>{row.get("capture").strftime("%Y-%m-%d %H:%M")}</td>' \
-        #          f'<td>{row.get("value")}</td>' \
-        #          f'</tr>'
 
         values = ''
         for row in payload["data"]:
@@ -384,7 +371,7 @@ def generate_pdf(file_id, begin_date, end_date, device_type):
         with open(f'{file_id}.html', 'w') as f:
             f.write(f'{result} {values}')
 
-        pdfkit.from_file(f'{file_id}.html', f"{file_id}.pdf", options={"enable-local-file-access": None}, verbose=True)
+        pdfkit.from_file(f'{file_id}.html', f"{file_id}.pdf", options={"enable-local-file-access": None})
 
         return {
             "success": True
