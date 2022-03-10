@@ -154,4 +154,4 @@ def graphql_server():
 if __name__ == '__main__':
     with app.app_context():
         INVALID_KEY = jsonify({'error': 'api key not given or invalid', 'success': False}), 401
-    app.run(debug=True, host='0.0.0.0', port=int(environ.get('PORT', 5000)))
+    app.run(debug=False, host='0.0.0.0', port=int(environ.get('PORT', 5000)))
