@@ -59,27 +59,28 @@ class DeviceType(Enum):
     PRESSURE = 2
 
 
-INVALID_KEY = None
-
-
 @app.errorhandler(404)
 def page_not_found(e):
-    return jsonify({'error': 'not found', 'success': False}), 404
+    return invalid_req('not found', 404)
 
 
 def valid():
     return False if request.headers.get('X-API-Key') != app.config["KEY"] else True
 
 
+def invalid_req(message, code):
+    return jsonify({'error': message, 'success': False}), code
+
+
 @app.route("/image", methods=["POST"])
 def image():
     if not valid():
-        return INVALID_KEY
+        return invalid_req('api key not given or invalid', 401)
 
     data = request.get_json()
 
     if data['device_type'] not in [d.name for d in DeviceType]:
-        return jsonify({'error': 'device_type is not valid', 'success': False}), 400
+        return invalid_req('device_type is not valid', 400)
 
     file_id = str(uuid.uuid4())
     payload = get_today_graph(data['device_type'], file_id)
@@ -93,31 +94,28 @@ def image():
 
             return send_file(file_id + '.jpg', mimetype='image/jpeg')
         except FileNotFoundError as error:
-            return jsonify({'error': str(error), 'success': False}), 500
+            return invalid_req(str(error), 500)
     return payload, 400
 
 
 @app.route("/pdf", methods=["GET"])
 def pdf():
     if not valid():
-        return INVALID_KEY
+        return invalid_req('api key not given or invalid', 401)
 
     data = request.get_json()
 
     if data['device_type'] not in [d.name for d in DeviceType]:
-        return jsonify({'error': 'device_type is not valid', 'success': False}), 400
+        return invalid_req('device_type is not valid', 400)
 
     if not data['begin_date']:
-        return jsonify({'error': 'begin_date is not specified', 'success': False}), 400
+        return invalid_req('begin_date is not specified', 400)
 
     if not data['end_date']:
-        return jsonify({'error': 'end_date is not specified', 'success': False}), 400
+        return invalid_req('end_date is not specified', 400)
 
     if not valid_date(data['begin_date']) or not valid_date(data['end_date']):
-        return {
-            "success": False,
-            "error": "invalid date format; should be YYYY-MM-DD"
-        }
+        return invalid_req('invalid date format; should be YYYY-MM-D', 400)
 
     file_id = str(uuid.uuid4())
     payload = generate_pdf(file_id, data['begin_date'], data['end_date'], data['device_type'])
@@ -132,14 +130,14 @@ def pdf():
 
             return send_file(f'{file_id}.pdf', mimetype='application/pdf')
         except FileNotFoundError as error:
-            return jsonify({'error': str(error), 'success': False}), 500
+            return invalid_req(str(error), 500)
     return payload, 400
 
 
 @app.route("/graphql", methods=["POST"])
 def graphql_server():
-    if request.headers.get('X-API-Key') != app.config["KEY"]:
-        return jsonify({'error': 'api key not given or invalid'}), 401
+    if not valid():
+        return invalid_req('api key not given or invalid', 401)
 
     data = request.get_json()
     success, result = graphql_sync(
@@ -152,6 +150,4 @@ def graphql_server():
 
 
 if __name__ == '__main__':
-    with app.app_context():
-        INVALID_KEY = jsonify({'error': 'api key not given or invalid', 'success': False}), 401
     app.run(debug=False, host='0.0.0.0', port=int(environ.get('PORT', 5000)))
