@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:app/services/avg_result.dart';
 import 'package:app/services/data_result.dart';
@@ -81,6 +82,7 @@ class DataWrapper extends ReturnFields {
       success = true;
     } catch (e) {
       error = e.toString();
+      log(e.toString());
     }
   }
 
@@ -93,6 +95,7 @@ class DataWrapper extends ReturnFields {
       success = true;
     } catch (e) {
       error = e.toString();
+      log(error.toString());
     }
   }
 }

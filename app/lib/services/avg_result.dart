@@ -13,7 +13,9 @@ class AvgResult extends ReturnFields {
   void parseData(Map mapData) {
     success = mapData['success'];
     error = mapData['error'];
-    data = mapData['data'];
+    if (mapData['data'] != null) {
+      data = mapData['data'];
+    }
   }
 
   String _generateQuery(String method) => '''

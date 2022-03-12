@@ -13,7 +13,7 @@ abstract class ReturnFields {
   static final urlImage = Uri.parse('https://kf34.herokuapp.com/image');
   static Map<String, String> headers = {
     "X-API-Key": key,
-    "Content-Type": "application/json",
+    "Content-Type": "application/json"
   };
 
   static String formatDate(String datetime) => DateFormat('dd-MM-yyyy HH:mm')

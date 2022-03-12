@@ -14,7 +14,11 @@ class MaxMinResult extends ReturnFields {
   void parseData(Map mapData) {
     success = mapData['success'];
     error = mapData['error'];
-    data = mapData['data'];
+
+    if (mapData['data'] != null) {
+      data = mapData['data'];
+    }
+
     if (mapData['captured'] != null) {
       for (String s in mapData['captured']) {
         captured.add(ReturnFields.formatDate(s));
