@@ -307,6 +307,7 @@ class _HomeState extends State<Home> {
 
   Widget _alertDialog() {
     return AlertDialog(
+      elevation: 25,
       title: const Text('No network connection or server error'),
       content: const Text(
           'No network connectivity or server error, the program will now close.'),
@@ -320,13 +321,38 @@ class _HomeState extends State<Home> {
     );
   }
 
+  Future<void> _storagePermission() async {
+    if (!await Permission.storage.request().isGranted) {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+                elevation: 25,
+                title: const Text('Storage permission denied!'),
+                content:
+                    const Text('The app requires enabled storage permission.'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        SystemChannels.platform
+                            .invokeMethod('SystemNavigator.pop');
+                      },
+                      child: const Text('Close')),
+                  TextButton(
+                      onPressed: () {
+                        openAppSettings();
+                      },
+                      child: const Text('Open settings'))
+                ],
+              ));
+    }
+  }
+
   Future<String> getKey() async {
     return await const FlutterSecureStorage().read(key: 'key') ?? '401';
   }
 
   Future<bool> _isServerOnline() async {
-    await Permission.storage.request();
-
     ReturnFields.key = await getKey();
     ImageGraph.imageHeaders['X-API-Key'] = await getKey();
 
@@ -351,8 +377,8 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: FutureBuilder(
-      future: _checkInternet(),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+      future: Future.wait([_checkInternet(), _storagePermission()]),
+      builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
             return infoWidget('Not connected', Icons.wifi_lock);
