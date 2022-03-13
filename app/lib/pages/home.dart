@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart';
 
 class Home extends StatefulWidget {
@@ -324,6 +325,8 @@ class _HomeState extends State<Home> {
   }
 
   Future<bool> _isServerOnline() async {
+    await Permission.storage.request();
+
     ReturnFields.key = await getKey();
     ImageGraph.imageHeaders['X-API-Key'] = await getKey();
 

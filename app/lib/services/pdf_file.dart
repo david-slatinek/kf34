@@ -5,7 +5,7 @@ import 'package:app/services/device_type.dart';
 import 'package:app/services/return_fields.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 import 'dart:io';
 
 class PdfFile extends ReturnFields {
@@ -13,16 +13,6 @@ class PdfFile extends ReturnFields {
 
   PdfFile({required DeviceType type, required this.start, required this.end})
       : super(type: type);
-
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
-  }
-
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/bla.pdf');
-  }
 
   Future<void> getFile() async {
     try {
@@ -35,8 +25,8 @@ class PdfFile extends ReturnFields {
           }));
 
       if (response.statusCode == 200) {
-        final file = await _localFile;
-        file.writeAsBytes(response.bodyBytes);
+        File('/storage/emulated/0/Download/${const Uuid().v1()}.pdf')
+            .writeAsBytes(response.bodyBytes);
         success = true;
       } else {
         throw Exception('Error: ' + response.body);
