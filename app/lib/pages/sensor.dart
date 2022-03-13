@@ -5,9 +5,9 @@ class Sensor extends StatelessWidget {
   const Sensor({Key? key}) : super(key: key);
 
   static const List<DeviceType> sensors = [
-    DeviceType.TEMPERATURE,
-    DeviceType.HUMIDITY,
-    DeviceType.PRESSURE,
+    DeviceType.temperature,
+    DeviceType.humidity,
+    DeviceType.pressure,
   ];
 
   static const List<IconData> icons = [

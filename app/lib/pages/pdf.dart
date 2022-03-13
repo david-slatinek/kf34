@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
+import 'package:flutter/painting.dart';
+import 'package:intl/intl.dart';
 
 class Pdf extends StatefulWidget {
   const Pdf({Key? key}) : super(key: key);
@@ -10,22 +11,36 @@ class Pdf extends StatefulWidget {
 }
 
 class _PdfState extends State<Pdf> {
-  String startDate = '';
-  String endDate = '';
-  var rng = Random();
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
 
-  void startPressed() {
-    // print("startPressed");
-    setState(() {
-      startDate = rng.nextInt(10).toString();
-    });
+  void startPressed() async {
+    DateTime? date = await selectDate();
+    if (date != null) {
+      setState(() {
+        startDate = date;
+      });
+    }
   }
 
-  void endPressed() {
-    // print("endPressed");
-    setState(() {
-      endDate = "david";
-    });
+  void endPressed() async {
+    DateTime? date = await selectDate();
+    if (date != null) {
+      setState(() {
+        endDate = date;
+      });
+    }
+  }
+
+  Future<DateTime?> selectDate() async {
+    return await showDatePicker(
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+      currentDate: startDate,
+      context: context,
+      initialDate: startDate,
+      firstDate: DateTime(2021),
+      lastDate: DateTime.now(),
+    );
   }
 
   void download() {
@@ -97,12 +112,22 @@ class _PdfState extends State<Pdf> {
           padding: const EdgeInsets.only(top: 10),
           child: Column(
             children: [
+              const Text(
+                'Export data for current sensor to pdf.',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 30),
               buildDaDatePicker(
                   text: 'Pick start date',
-                  dateText: startDate,
+                  dateText: DateFormat('yyyy-MM-dd').format(startDate),
                   action: startPressed),
               buildDaDatePicker(
-                  text: 'Pick end date', dateText: endDate, action: endPressed),
+                  text: 'Pick end date',
+                  dateText: DateFormat('yyyy-MM-dd').format(endDate),
+                  action: endPressed),
               const SizedBox(
                 height: 20,
               ),

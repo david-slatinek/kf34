@@ -20,7 +20,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  DataWrapper data = DataWrapper(type: DeviceType.TEMPERATURE);
+  DataWrapper data = DataWrapper(type: DeviceType.temperature);
 
   Widget buildCard(
       {required String text,
