@@ -1,3 +1,4 @@
+import 'package:app/pages/pdf.dart';
 import 'package:app/pages/sensor.dart';
 import 'package:app/pages/view.dart';
 import 'package:app/pages/view_image.dart';
@@ -263,7 +264,8 @@ class _HomeState extends State<Home> {
           leading: IconButton(
             tooltip: 'Export data to pdf',
             onPressed: () {
-              print('Pressed PDF');
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Pdf()));
             },
             icon: const Icon(
               Icons.file_download,

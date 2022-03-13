@@ -9,20 +9,31 @@ class Pdf extends StatefulWidget {
 }
 
 class _PdfState extends State<Pdf> {
+  Widget buildButton(String text, IconData icon) {
+    return ElevatedButton.icon(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateColor.resolveWith(
+            (states) => const Color.fromRGBO(0, 112, 222, 1.0)),
+        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        )),
+      ),
+      onPressed: () {},
+      icon: Icon(icon),
+      label: Text(text),
+    );
+  }
+
   Widget buildDaDatePicker(String text) {
     return SizedBox(
       width: double.infinity,
       child: Column(
         children: [
-          ElevatedButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.date_range_outlined),
-            label: Text(text),
-          ),
+          buildButton(text, Icons.date_range),
           const SizedBox(
             height: 10,
           ),
-          Text('date'),
+          const Text('date'),
           const SizedBox(
             height: 40,
           ),
@@ -57,7 +68,10 @@ class _PdfState extends State<Pdf> {
             children: [
               buildDaDatePicker('Pick start date'),
               buildDaDatePicker('Pick end date'),
-              ElevatedButton(onPressed: () {}, child: const Text('Download'))
+              const SizedBox(
+                height: 20,
+              ),
+              buildButton('Download', Icons.download_rounded)
             ],
           ),
         ));
