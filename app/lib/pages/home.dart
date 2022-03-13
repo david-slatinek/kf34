@@ -260,9 +260,15 @@ class _HomeState extends State<Home> {
                   size: 30,
                 )),
           ],
-          leading: const Icon(
-            Icons.house_outlined,
-            size: 30,
+          leading: IconButton(
+            tooltip: 'Export data to pdf',
+            onPressed: () {
+              print('Pressed PDF');
+            },
+            icon: const Icon(
+              Icons.file_download,
+              size: 30,
+            ),
           ),
           backgroundColor: const Color.fromRGBO(0, 112, 222, 1.0),
           title: const Text(

@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:app/pages/pdf.dart';
 import 'package:app/pages/sensor.dart';
 import 'package:app/pages/view.dart';
 import 'package:app/pages/view_image.dart';
@@ -12,7 +13,7 @@ Future<void> main() async {
     theme: ThemeData(
       primaryColor: Colors.indigo,
     ),
-    initialRoute: '/',
+    initialRoute: '/pdf',
     routes: {
       '/': (context) => const Home(),
       '/view': (context) => const View(
@@ -20,6 +21,7 @@ Future<void> main() async {
           ),
       '/sensor': (context) => const Sensor(),
       '/view_image': (context) => ViewImage(data: Uint8List(0)),
+      '/pdf': (context) => const Pdf(),
     },
   ));
 }
