@@ -1,4 +1,5 @@
 import 'package:app/services/device_type.dart';
+import 'package:app/services/pdf_file.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -65,7 +66,8 @@ class _PdfState extends State<Pdf> {
               ));
       return;
     }
-    print(widget.type);
+    PdfFile file = PdfFile(type: widget.type, start: startDate, end: endDate);
+    file.getFile();
   }
 
   Widget buildButton(

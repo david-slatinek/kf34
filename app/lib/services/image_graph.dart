@@ -12,9 +12,7 @@ class ImageGraph extends ReturnFields {
     "Content-Type": "application/json",
   };
 
-  ImageGraph({required type}) : super(type: type) {
-    imageHeaders['device_type'] = (type as DeviceType).asString();
-  }
+  ImageGraph({required type}) : super(type: type);
 
   Future<void> getData() async {
     try {

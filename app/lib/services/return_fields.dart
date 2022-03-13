@@ -9,8 +9,11 @@ abstract class ReturnFields {
 
   ReturnFields({required this.type});
 
-  static final url = Uri.parse('https://kf34.herokuapp.com/graphql');
-  static final urlImage = Uri.parse('https://kf34.herokuapp.com/image');
+  static const String baseUrl = "https://kf34.herokuapp.com";
+  static final Uri url = Uri.parse(baseUrl + '/graphql');
+  static final Uri urlImage = Uri.parse(baseUrl + '/image');
+  static final Uri pdfUrl = Uri.parse(baseUrl + '/pdf');
+
   static Map<String, String> headers = {
     "X-API-Key": key,
     "Content-Type": "application/json"
