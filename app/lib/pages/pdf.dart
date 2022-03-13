@@ -44,7 +44,24 @@ class _PdfState extends State<Pdf> {
   }
 
   void download() {
-    print("DOWNLOAD");
+    if (endDate.isBefore(startDate)) {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+                elevation: 24,
+                title: const Text('Invalid end date!'),
+                content: const Text("End date can't be before the start date!"),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context, 'OK');
+                      },
+                      child: const Text('OK'))
+                ],
+              ));
+      return;
+    }
   }
 
   Widget buildButton(
