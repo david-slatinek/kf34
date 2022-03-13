@@ -1,10 +1,13 @@
+import 'package:app/services/device_type.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:intl/intl.dart';
 
 class Pdf extends StatefulWidget {
-  const Pdf({Key? key}) : super(key: key);
+  const Pdf({Key? key, required this.type}) : super(key: key);
+
+  final DeviceType type;
 
   @override
   State<Pdf> createState() => _PdfState();
@@ -62,6 +65,7 @@ class _PdfState extends State<Pdf> {
               ));
       return;
     }
+    print(widget.type);
   }
 
   Widget buildButton(

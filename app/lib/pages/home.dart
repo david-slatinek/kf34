@@ -264,8 +264,10 @@ class _HomeState extends State<Home> {
           leading: IconButton(
             tooltip: 'Export data to pdf',
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const Pdf()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Pdf(type: data.type)));
             },
             icon: const Icon(
               Icons.file_download,
