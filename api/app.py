@@ -98,7 +98,7 @@ def image():
     return payload, 400
 
 
-@app.route("/pdf", methods=["GET"])
+@app.route("/pdf", methods=["POST"])
 def pdf():
     if not valid():
         return invalid_req('api key not given or invalid', 401)
