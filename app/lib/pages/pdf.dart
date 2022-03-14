@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Pdf extends StatefulWidget {
   const Pdf({Key? key, required this.type}) : super(key: key);
@@ -18,6 +18,7 @@ class Pdf extends StatefulWidget {
 class _PdfState extends State<Pdf> {
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
+  bool enabled = true;
 
   void startPressed() async {
     DateTime? date = await selectDate();
@@ -48,34 +49,14 @@ class _PdfState extends State<Pdf> {
     );
   }
 
-  void download() async {
-    if (endDate.isBefore(startDate)) {
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-                elevation: 24,
-                title: const Text('Invalid end date!'),
-                content: const Text("End date can't be before the start date!"),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context, 'OK');
-                      },
-                      child: const Text('OK'))
-                ],
-              ));
-      return;
-    }
-
-    showDialog(
+  Future getDialog({required String title, required String text}) {
+    return showDialog(
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) => AlertDialog(
               elevation: 24,
-              title: const Text('Noted!'),
-              content: const Text(
-                  "We will inform you when the file download is done!"),
+              title: Text(title),
+              content: Text(text),
               actions: [
                 TextButton(
                     onPressed: () {
@@ -84,11 +65,47 @@ class _PdfState extends State<Pdf> {
                     child: const Text('OK'))
               ],
             ));
+  }
 
-    // PdfFile file = PdfFile(type: widget.type, start: startDate, end: endDate);
-    // Navigator.pop(context);
-    // if (await file.getFile()) {
-    // } else {}
+  void download() async {
+    if (!enabled) {
+      Fluttertoast.showToast(
+        msg: "You have already downloaded the file!",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+
+    if (endDate.isBefore(startDate)) {
+      getDialog(
+          title: 'Invalid end date!',
+          text: "End date can't be before the start date!");
+      return;
+    }
+
+    enabled = false;
+
+    Fluttertoast.showToast(
+      msg: "Downloading, please wait...",
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.blueGrey,
+      textColor: Colors.black,
+    );
+
+    PdfFile file = PdfFile(type: widget.type, start: startDate, end: endDate);
+
+    if (await file.getFile()) {
+      getDialog(
+          title: 'Download succeeded!',
+          text: 'File was downloaded successfully!');
+    } else {
+      getDialog(title: 'Download failed!', text: 'Error: ${file.error}');
+      enabled = true;
+    }
   }
 
   Widget buildButton(
@@ -132,6 +149,35 @@ class _PdfState extends State<Pdf> {
     );
   }
 
+  Widget _mainScreen() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Column(
+        children: [
+          const Text(
+            'Export data for current sensor to pdf.',
+            style: TextStyle(
+                color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 30),
+          buildDaDatePicker(
+              text: 'Pick start date',
+              dateText: DateFormat('yyyy-MM-dd').format(startDate),
+              action: startPressed),
+          buildDaDatePicker(
+              text: 'Pick end date',
+              dateText: DateFormat('yyyy-MM-dd').format(endDate),
+              action: endPressed),
+          const SizedBox(
+            height: 20,
+          ),
+          buildButton(
+              text: 'Download', icon: Icons.download_rounded, action: download),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -152,35 +198,6 @@ class _PdfState extends State<Pdf> {
           ),
           centerTitle: true,
         ),
-        body: Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Column(
-            children: [
-              const Text(
-                'Export data for current sensor to pdf.',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 30),
-              buildDaDatePicker(
-                  text: 'Pick start date',
-                  dateText: DateFormat('yyyy-MM-dd').format(startDate),
-                  action: startPressed),
-              buildDaDatePicker(
-                  text: 'Pick end date',
-                  dateText: DateFormat('yyyy-MM-dd').format(endDate),
-                  action: endPressed),
-              const SizedBox(
-                height: 20,
-              ),
-              buildButton(
-                  text: 'Download',
-                  icon: Icons.download_rounded,
-                  action: download),
-            ],
-          ),
-        ));
+        body: _mainScreen());
   }
 }
