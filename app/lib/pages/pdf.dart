@@ -90,9 +90,9 @@ class _PdfState extends State<Pdf> {
 
     Fluttertoast.showToast(
       msg: "Downloading, please wait...",
-      toastLength: Toast.LENGTH_LONG,
+      toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.blueGrey,
+      backgroundColor: Colors.blueAccent,
       textColor: Colors.black,
     );
 
