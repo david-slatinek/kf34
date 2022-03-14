@@ -14,7 +14,7 @@ Future<void> main() async {
     theme: ThemeData(
       primaryColor: Colors.indigo,
     ),
-    initialRoute: '/pdf',
+    initialRoute: '/',
     routes: {
       '/': (context) => const Home(),
       '/view': (context) => const View(

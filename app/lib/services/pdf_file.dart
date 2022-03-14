@@ -14,7 +14,7 @@ class PdfFile extends ReturnFields {
   PdfFile({required DeviceType type, required this.start, required this.end})
       : super(type: type);
 
-  Future<void> getFile() async {
+  Future<bool> getFile() async {
     try {
       Response response = await post(ReturnFields.pdfUrl,
           headers: ReturnFields.headers,
@@ -28,12 +28,14 @@ class PdfFile extends ReturnFields {
         File('/storage/emulated/0/Download/${const Uuid().v1()}.pdf')
             .writeAsBytes(response.bodyBytes);
         success = true;
+        return true;
       } else {
         throw Exception('Error: ' + response.body);
       }
     } catch (e) {
       error = e.toString();
       log(error.toString());
+      return false;
     }
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Pdf extends StatefulWidget {
   const Pdf({Key? key, required this.type}) : super(key: key);
@@ -47,7 +48,7 @@ class _PdfState extends State<Pdf> {
     );
   }
 
-  void download() {
+  void download() async {
     if (endDate.isBefore(startDate)) {
       showDialog(
           barrierDismissible: false,
@@ -66,8 +67,28 @@ class _PdfState extends State<Pdf> {
               ));
       return;
     }
-    PdfFile file = PdfFile(type: widget.type, start: startDate, end: endDate);
-    file.getFile();
+
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              elevation: 24,
+              title: const Text('Noted!'),
+              content: const Text(
+                  "We will inform you when the file download is done!"),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, 'OK');
+                    },
+                    child: const Text('OK'))
+              ],
+            ));
+
+    // PdfFile file = PdfFile(type: widget.type, start: startDate, end: endDate);
+    // Navigator.pop(context);
+    // if (await file.getFile()) {
+    // } else {}
   }
 
   Widget buildButton(
@@ -157,7 +178,7 @@ class _PdfState extends State<Pdf> {
               buildButton(
                   text: 'Download',
                   icon: Icons.download_rounded,
-                  action: download)
+                  action: download),
             ],
           ),
         ));
