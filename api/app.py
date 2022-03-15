@@ -57,6 +57,8 @@ class DeviceType(Enum):
     TEMPERATURE = 0
     HUMIDITY = 1
     PRESSURE = 2
+    HEART_RATE = 3
+    OXYGEN_SATURATION = 4
 
 
 @app.errorhandler(404)

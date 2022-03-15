@@ -42,7 +42,9 @@ type InsertResult implements ReturnFields {
 enum DeviceType {
     TEMPERATURE,
     HUMIDITY,
-    PRESSURE
+    PRESSURE,
+    HEART_RATE,
+    OXYGEN_SATURATION
 }
 
 type ImageResult implements ReturnFields {
