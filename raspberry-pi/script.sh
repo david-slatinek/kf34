@@ -1,3 +1,6 @@
 #!/bin/bash
-cd /home/pi/Documents/kf34/ || exit
-./sensor_data.py
+cd /home/pi/Documents/kf34/temperature-humidity || exit
+./temperature_humidity.py
+cd ../
+./upload.py
+rm results.csv
