@@ -1,5 +1,10 @@
-all: permissions
+all: temperature-humidity heart-oxygen main
 
-permissions:
-	chmod -v u+x led_buzzer.py status.py email.sh script.sh
-	chmod -v +x sensor_data.py
+temperature-humidity:
+	chmod -v +x temperature-humidity/temperature_humidity.py
+
+heart-oxygen:
+	chmod -v +x heart-oxygen/data_processing.py heart-oxygen/script.sh
+
+main:
+	chmod -v +x led.py email.sh script.sh upload.py
