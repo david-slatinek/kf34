@@ -4,6 +4,7 @@ import hrcalc
 import threading
 import time
 import numpy as np
+import csv
 
 
 class HeartRateMonitor(object):
@@ -20,11 +21,18 @@ class HeartRateMonitor(object):
         self.print_raw = print_raw
         self.print_result = print_result
 
+    def _write_to_csv(self, filename, data):
+        with open(filename, 'w') as f:
+            writer = csv.writer(f, delimiter=',')
+            writer.writerow(data)
+
     def run_sensor(self):
         sensor = MAX30102()
         ir_data = []
         red_data = []
         bpms = []
+        spo2_data = []
+        bpm_data = []
 
         # run until told to stop
         while not self._thread.stopped:
@@ -48,6 +56,8 @@ class HeartRateMonitor(object):
                     bpm, valid_bpm, spo2, valid_spo2 = hrcalc.calc_hr_and_spo2(ir_data, red_data)
                     if valid_bpm:
                         bpms.append(bpm)
+                        bpm_data.append(bpm)
+
                         while len(bpms) > 4:
                             bpms.pop(0)
                         self.bpm = np.mean(bpms)
@@ -57,8 +67,13 @@ class HeartRateMonitor(object):
                                 print("Finger not detected")
                         if self.print_result:
                             print("BPM: {0}, SpO2: {1}".format(self.bpm, spo2))
+                    if valid_spo2:
+                        spo2_data.append(spo2)
 
             time.sleep(self.LOOP_TIME)
+
+        self._write_to_csv('heart.csv', bpm_data)
+        self._write_to_csv('spo2.csv', spo2_data)
 
         sensor.shutdown()
 
