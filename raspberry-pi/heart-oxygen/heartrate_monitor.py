@@ -24,7 +24,8 @@ class HeartRateMonitor(object):
     def _write_to_csv(self, filename, data):
         with open(filename, 'w') as f:
             writer = csv.writer(f, delimiter=',')
-            writer.writerow(data)
+            for x in data:
+                writer.writerow([x])
 
     def run_sensor(self):
         sensor = MAX30102()
