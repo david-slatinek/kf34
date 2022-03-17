@@ -11,11 +11,11 @@
 
 # About
 
-A smart home system with Raspberry Pi, Arduino, PostgreSQL, Docker, Flask, GraphQL, and Flutter.
+A smart home system with Raspberry Pi, PostgreSQL, Docker, Flask, GraphQL, and Flutter.
 
 The project consists of 4 main components:
 
-- Capturing data from the sensors using Raspberry Pi and Arduino
+- Capturing data from the sensors using Raspberry Pi
 - Database for data storage
 - API for storing and retrieving data
 - Mobile app for displaying values
@@ -53,7 +53,10 @@ Sensor schematic:
 
 In addition, the MAX30102 sensor can measure heart-rate and oxygen level.
 Sensor schematic:
-![Raspberry Pi dht22 wiring](/images/circuit-designs/design-max30102.png)
+
+<div align="center">
+  <img src="./images/circuit-designs/design-max30102.png" alt="Raspberry Pi max30102 wiring" height="600" width="500">
+</div>
 
 # Database
 
@@ -95,7 +98,6 @@ Main method:
 def valid():
     return False if request.headers.get('X-API-Key') != app.config["KEY"] else True
 
-
 def invalid_req(message, code):
     return jsonify({'error': message, 'success': False}), code
 
@@ -125,7 +127,7 @@ The mobile app was made with Flutter and Dart. The main app functionality is get
 
 The app features the latest, average, median, standard deviation, all today's values along with maximum and minimum values. It also includes a graph with all today's values.
 
-More images are available [here](/images/app/).
+More images can be seen [here](/images/app/).
 
 <div align="center">
   <img alt="App video" src="images/app/app.gif"/>
