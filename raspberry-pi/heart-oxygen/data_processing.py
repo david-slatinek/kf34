@@ -13,7 +13,7 @@ class DeviceType(Enum):
 def write(device_type: DeviceType, value: float):
     with open('../results.csv', 'a') as f:
         writer = csv.writer(f, delimiter=',')
-        writer.writerow([device_type, value])
+        writer.writerow([device_type.name, value])
 
 
 def read(filename):

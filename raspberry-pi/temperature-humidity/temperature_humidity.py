@@ -22,16 +22,18 @@ def handle_error(err):
     subprocess.Popen(["../led.py", "-e"])
     subprocess.Popen(["../email.sh", err])
 
+
+def write(device_type: DeviceType, value: float):
+    with open('../results.csv', 'a') as f:
+        writer = csv.writer(f, delimiter=',')
+        writer.writerow([device_type.name, value])
+
+
 if __name__ == "__main__":
     try:
         dht = adafruit_dht.DHT22(D17, use_pulseio=False)
-
-        temperature, humidity = dht.temperature, dht.humidity
-
-        with open('../results.csv', 'a') as f:
-                writer = csv.writer(f, delimiter=',')
-                writer.writerow([DeviceType.TEMPERATURE, temperature])
-                writer.writerow([DeviceType.HUMIDITY, humidity])
+        write(DeviceType.TEMPERATURE, dht.temperature)
+        write(DeviceType.HUMIDITY, dht.humidity)
     except RuntimeError as error:
         handle_error(error.args[0])
         dht.exit()
