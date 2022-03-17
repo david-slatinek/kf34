@@ -44,7 +44,7 @@ Date: <date of error>
 ```
 
 Sensor schematic:
-![Raspberry Pi sensor wiring](/images/circuit-designs/pi-wiring.png)
+![Raspberry Pi sensor wiring](/images/circuit-designs/design-dht22.png)
 
 # Arduino
 <div align="center">
