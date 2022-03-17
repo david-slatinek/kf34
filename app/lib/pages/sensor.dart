@@ -8,12 +8,16 @@ class Sensor extends StatelessWidget {
     DeviceType.temperature,
     DeviceType.humidity,
     DeviceType.pressure,
+    DeviceType.heart_rate,
+    DeviceType.oxygen_saturation
   ];
 
   static const List<IconData> icons = [
     Icons.thermostat,
     Icons.water,
     Icons.air,
+    Icons.favorite,
+    Icons.add_circle
   ];
 
   @override

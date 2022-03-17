@@ -35,9 +35,12 @@ class DataWrapper extends ReturnFields {
       case DeviceType.temperature:
         return '°C';
       case DeviceType.humidity:
+      case DeviceType.oxygen_saturation:
         return '%';
       case DeviceType.pressure:
         return 'hPa';
+      case DeviceType.heart_rate:
+        return 'bpm';
     }
   }
 

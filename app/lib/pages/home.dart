@@ -160,7 +160,7 @@ class _HomeState extends State<Home> {
             addViewButton: false),
         buildDivider(),
         buildCard(
-            text: 'Today\'s std deviation',
+            text: 'Today\'s std dev',
             value: data.stDeviationToday.data,
             capture: [],
             addViewButton: false),

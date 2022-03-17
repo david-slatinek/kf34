@@ -1,4 +1,4 @@
-enum DeviceType { temperature, humidity, pressure }
+enum DeviceType { temperature, humidity, pressure, heart_rate, oxygen_saturation }
 
 extension ParseToString on DeviceType {
   String asString() {
