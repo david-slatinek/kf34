@@ -44,7 +44,7 @@ Date: <date of error>
 ```
 
 Sensor schematic:
-![Raspberry Pi sensor wiring](/images/pi-wiring.png)
+![Raspberry Pi sensor wiring](/images/circuit-designs/pi-wiring.png)
 
 # Arduino
 <div align="center">
@@ -54,7 +54,7 @@ Sensor schematic:
 When Arduino receives a request from the Raspberry Pi, it replies with an air pressure value, which he gets from the BMP280 sensor. 
 
 Sensor schematic:
-![Arduino sensor wiring](/images/arduino-wiring.png)
+![Arduino sensor wiring](/images/circuit-designs/arduino-wiring.png)
 
 # Database
 <div align="center">
@@ -114,8 +114,8 @@ The mobile app was made with Flutter and Dart. The main app functionality is get
 
 The app features the latest, average, median, standard deviation, all today's values along with maximum and minimum values. It also includes a graph with all today's values.
 
-More images are available [here](/images).
+More images are available [here](/images/app/).
 
 <div align="center">
-  <img alt="App video" src="images/app.gif"/>
+  <img alt="App video" src="images/app/app.gif"/>
 </div>
