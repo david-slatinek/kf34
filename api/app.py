@@ -142,6 +142,10 @@ def graphql_server():
         return invalid_req('api key not given or invalid', 401)
 
     data = request.get_json()
+
+    if data['variables']['device_type'] not in [d.name for d in DeviceType]:
+        return invalid_req('device_type is not valid', 400)
+
     success, result = graphql_sync(
         schema,
         data,
