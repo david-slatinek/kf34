@@ -10,15 +10,7 @@ logging.basicConfig(level=logging.ERROR, filename="errors.log", filemode="a", fo
                     datefmt="%d.%m.%Y %H:%M:%S")
 
 
-class DeviceType(Enum):
-    TEMPERATURE = 0
-    HUMIDITY = 1
-    PRESSURE = 2
-    HEART_RATE = 3
-    OXYGEN_SATURATION = 4
-
-
-def upload(device_type: DeviceType, value: float):
+def upload(device_type: str, value: float):
     url = ''
     query = """
                 mutation AddData($value: Float!, $device_type: DeviceType!) {
@@ -50,4 +42,4 @@ def read():
 
 if __name__ == '__main__':
     for row in read():
-        upload(row[0], row[1])
+        upload(row[0], float(row[1]))
