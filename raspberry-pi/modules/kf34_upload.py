@@ -5,8 +5,10 @@ from kf34_types import DeviceType
 import csv
 from datetime import datetime
 
+format = '%d.%m.%Y %H:%M:%S'
+
 logging.basicConfig(level=logging.ERROR, filename='errors.log', filemode='a', format='%(asctime)s---%(message)s',
-                    datefmt='%d.%m.%Y %H:%M:%S')
+                    datefmt=format)
 
 
 def upload(device_type: DeviceType, value: float, path: str = '../values.csv', mode: str = 'a'):
@@ -36,4 +38,4 @@ def upload(device_type: DeviceType, value: float, path: str = '../values.csv', m
 def _write(device_type: DeviceType, value: float, path: str = '../values.csv', mode: str = 'a'):
     with open(path, mode) as f:
         writer = csv.writer(f, delimiter=',')
-        writer.writerow([datetime.now().strftime('%Y/%m/%d %H:%M:%S'), device_type, value])
+        writer.writerow([datetime.now().strftime(format), device_type, value])
