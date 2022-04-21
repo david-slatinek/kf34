@@ -1,13 +1,16 @@
-all: temperature-humidity heart-oxygen pressure main
+all: body-temperature heart-oxygen modules pressure temperature-humidity
 
-temperature-humidity:
-	chmod -v +x temperature-humidity/temperature_humidity.py
+body-temperature:
+	chmod -v +x body-temperature/main.py
 
 heart-oxygen:
 	chmod -v +x heart-oxygen/data_processing.py heart-oxygen/script.sh
 
-pressure:
-	chmod -v +x pressure/pressure.py
+modules:
+	chmod -v +x modules/
 
-main:
-	chmod -v +x led.py email.sh script.sh upload.py
+pressure:
+	chmod -v +x pressure/main.py
+
+temperature-humidity:
+	chmod -v +x temperature-humidity/main.py
