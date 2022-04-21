@@ -16,7 +16,7 @@ def handler(signal_received=None, frame=None):
 
 
 def write_status(status: str):
-    with open("status.txt", "w") as f:
+    with open("/home/pi/Documents/kf34/status.txt", "w") as f:
         f.write(status)
 
 
