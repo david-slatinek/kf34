@@ -1,14 +1,9 @@
 import requests
-import logging
 from os import environ
 from kf34_types import DeviceType
+from kf34_error_handling import handle_error
 import csv
 from datetime import datetime
-
-format = '%d.%m.%Y %H:%M:%S'
-
-logging.basicConfig(level=logging.ERROR, filename='errors.log', filemode='a', format='%(asctime)s---%(message)s',
-                    datefmt=format)
 
 
 def upload(device_type: DeviceType, value: float, path: str = '../values.csv', mode: str = 'a'):
@@ -28,14 +23,14 @@ def upload(device_type: DeviceType, value: float, path: str = '../values.csv', m
     if r.status_code == 200:
         data = r.json()
         if not data['data']['addData']['success']:
-            logging.error(data['data']['addData']['error'])
+            handle_error(data['data']['addData']['error'])
             _write(device_type, value, path, mode)
     else:
-        logging.error(str(r.status_code) + '-' + str(device_type))
+        handle_error(str(r.status_code) + '-' + str(device_type))
         _write(device_type, value, path, mode)
 
 
 def _write(device_type: DeviceType, value: float, path: str = '../values.csv', mode: str = 'a'):
     with open(path, mode) as f:
         writer = csv.writer(f, delimiter=',')
-        writer.writerow([datetime.now().strftime(format), device_type, value])
+        writer.writerow([datetime.now().strftime('%d.%m.%Y %H:%M:%S'), device_type, value])
