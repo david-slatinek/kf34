@@ -1,9 +1,7 @@
 import requests
 from os import environ
 from kf34_types import DeviceType
-from kf34_error_handling import handle_error
-import csv
-from datetime import datetime
+from kf34_error_handling import handle_error, write_csv
 
 
 def upload(device_type: DeviceType, value: float, path: str = '../values.csv', mode: str = 'a'):
@@ -24,13 +22,7 @@ def upload(device_type: DeviceType, value: float, path: str = '../values.csv', m
         data = r.json()
         if not data['data']['addData']['success']:
             handle_error(data['data']['addData']['error'])
-            _write(device_type, value, path, mode)
+            write_csv(device_type, value, path, mode)
     else:
         handle_error(str(r.status_code) + '-' + str(device_type))
-        _write(device_type, value, path, mode)
-
-
-def _write(device_type: DeviceType, value: float, path: str = '../values.csv', mode: str = 'a'):
-    with open(path, mode) as f:
-        writer = csv.writer(f, delimiter=',')
-        writer.writerow([datetime.now().strftime('%d.%m.%Y %H:%M:%S'), device_type, value])
+        write_csv(device_type, value, path, mode)
