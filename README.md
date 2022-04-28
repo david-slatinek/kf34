@@ -49,14 +49,20 @@ Date: <date of error>
 ```
 
 Sensor schematic:
-![Raspberry Pi dht22 wiring](/images/circuit-designs/design-dht22.png)
-
-In addition, the MAX30102 sensor can measure heart-rate and oxygen level.
-Sensor schematic:
-
 <div align="center">
-  <img src="./images/circuit-designs/design-max30102.png" alt="Raspberry Pi max30102 wiring" height="600" width="500">
+  <img src="./images/circuit-designs/design-combined.png" alt="Raspberry Pi wiring" height="500" width="700">
 </div>
+
+<br>
+
+In addition, the system uses the following sensors:
+- MAX30102 - heart-rate and oxygen level
+- AD8232 - ECG
+- MAX30205 - body temperature
+
+<br>
+
+More schematic images can be seen [here](/images/circuit-designs/).
 
 # Database
 
