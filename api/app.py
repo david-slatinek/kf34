@@ -54,11 +54,12 @@ schema = make_executable_schema(
 
 
 class DeviceType(Enum):
-    TEMPERATURE = 0
-    HUMIDITY = 1
-    PRESSURE = 2
-    HEART_RATE = 3
-    OXYGEN_SATURATION = 4
+    BODY_TEMPERATURE = 0
+    HEART_RATE = 1
+    OXYGEN_SATURATION = 2
+    PRESSURE = 3
+    TEMPERATURE = 4
+    HUMIDITY = 5
 
 
 @app.errorhandler(404)
