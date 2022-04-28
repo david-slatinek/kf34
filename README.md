@@ -60,9 +60,7 @@ In addition, the system uses the following sensors:
 - AD8232 - ECG
 - MAX30205 - body temperature
 
-<br>
-
-More schematic images can be seen [here](/images/circuit-designs/).
+More circuit design images can be seen [here](/images/circuit-designs/).
 
 # Database
 
