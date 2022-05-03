@@ -5,19 +5,22 @@ class Sensor extends StatelessWidget {
   const Sensor({Key? key}) : super(key: key);
 
   static const List<DeviceType> sensors = [
+    DeviceType.body_temperature,
+    DeviceType.heart_rate,
+    DeviceType.oxygen_saturation,
     DeviceType.temperature,
     DeviceType.humidity,
-    DeviceType.pressure,
-    DeviceType.heart_rate,
-    DeviceType.oxygen_saturation
+    // DeviceType.pressure,
   ];
 
   static const List<IconData> icons = [
+    Icons.accessibility,
+    Icons.favorite,
+    // Icons.add_circle,
+    Icons.air,
     Icons.thermostat,
     Icons.water,
-    Icons.air,
-    Icons.favorite,
-    Icons.add_circle
+    // Icons.air,
   ];
 
   @override

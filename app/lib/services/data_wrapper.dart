@@ -33,12 +33,13 @@ class DataWrapper extends ReturnFields {
   String symbol() {
     switch (type) {
       case DeviceType.temperature:
+      case DeviceType.body_temperature:
         return '°C';
       case DeviceType.humidity:
       case DeviceType.oxygen_saturation:
         return '%';
-      case DeviceType.pressure:
-        return 'hPa';
+      // case DeviceType.pressure:
+      //   return 'hPa';
       case DeviceType.heart_rate:
         return 'bpm';
     }
