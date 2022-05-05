@@ -134,5 +134,5 @@ The app features the latest, average, median, standard deviation, all today's va
 More images can be seen [here](/images/app/).
 
 <div align="center">
-  <img alt="App video" src="images/app/app.gif"/>
+  <img alt="App video" src="images/app/video/app.gif"/>
 </div>
