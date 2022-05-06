@@ -310,7 +310,7 @@ class _HomeState extends State<Home> {
       elevation: 25,
       title: const Text('No network connection or server error'),
       content: const Text(
-          'No network connectivity or server error, the program will now close.'),
+          'No network connectivity or server error. The app will now close.'),
       actions: [
         TextButton(
             onPressed: () {
