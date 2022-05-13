@@ -1,8 +1,6 @@
 import 'package:app/services/device_type.dart';
 import 'package:app/services/pdf_file.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
