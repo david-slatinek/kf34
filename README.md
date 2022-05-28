@@ -8,6 +8,7 @@
 - [Database](#database)
 - [API](#api)
 - [App](#app)
+- [Improved infrastructure](#improved-infrastructure)
 
 # About
 
@@ -136,3 +137,7 @@ More images can be seen [here](/images/app/).
 <div align="center">
   <img alt="App video" src="images/video/app.gif"/>
 </div>
+
+# Improved infrastructure
+
+![Project infrastructure](/images/improved-infrastructure.png)
