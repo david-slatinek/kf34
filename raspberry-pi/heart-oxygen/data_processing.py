@@ -2,6 +2,7 @@
 
 import statistics
 from kf34_upload import DeviceType, upload
+import csv
 
 
 def read(filename):
