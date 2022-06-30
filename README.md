@@ -24,7 +24,9 @@ The project consists of 4 main components:
 Project infrastructure:
 ![Project infrastructure](/images/project-infrastructure.png)
 
-![Project units](/images/units.png)
+<div align="center">
+ <img alt="Project units" src="./images/units.png"/>
+</div>
 
 # Raspberry Pi
 
