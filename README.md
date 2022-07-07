@@ -9,6 +9,7 @@
 - [API](#api)
 - [App](#app)
 - [Large-scale infrastructure](#large-scale-infrastructure)
+- [Further reading](#further-reading)
 
 # About
 
@@ -145,3 +146,7 @@ More images can be seen [here](/images/app/).
 # Large-scale infrastructure
 
 ![Large-scale project infrastructure](/images/improved-infrastructure.png)
+
+# Further reading
+
+This project is a part of my thesis. Entire document is available [here](https://dk.um.si/IzpisGradiva.php?id=82004&lang=slv)
