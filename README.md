@@ -112,6 +112,7 @@ def graphql_server():
         return invalid_req('api key not given or invalid', 401)
 
     data = request.get_json()
+    
     success, result = graphql_sync(
         schema,
         data,
