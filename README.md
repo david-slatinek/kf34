@@ -13,14 +13,13 @@
 
 # About
 
-A smart home system with Raspberry Pi, PostgreSQL, Docker, Flask, GraphQL, and Flutter.
+Healthcare system with Raspberry Pi, PostgreSQL, Docker, Flask, GraphQL, and Flutter.
 
 The project consists of 4 main components:
-
 - Capturing data from the sensors using Raspberry Pi
 - Database for data storage
 - API for storing and retrieving data
-- Mobile app for displaying values
+- Mobile app for displaying the values
 
 Project infrastructure:
 ![Project infrastructure](/images/project-infrastructure.png)
@@ -36,8 +35,7 @@ Project infrastructure:
   <img alt="Python" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
 </div>
 
-Raspberry Pi is responsible to get the data from the DHT22 sensor (temperature, humidity) and from the BMP280 sensor (air pressure) every 15 minutes - by using **cron**. After that, it uploads data to the API by calling an appropriate mutation:
-
+Raspberry Pi is responsible for getting the data from the DHT22 sensor (temperature, humidity) every 15 minutes - using **cron**. After that, it uploads data to the API by calling an appropriate mutation:
 ```
 mutation AddData($value: Float!, $device_type: DeviceType!) {
     addData(value: $value, device_type: $device_type) {
@@ -47,8 +45,7 @@ mutation AddData($value: Float!, $device_type: DeviceType!) {
 }
 ```
 
-In case of errors, the LED is turned on. In addition to that, Raspberry Pi also sends an email, and thus notifies the system admin about the occurred error with the following syntax:
-
+In case of errors, the LED is turned on. In addition, Raspberry Pi also sends an email, and thus notifies the system admin about the occurred error with the following syntax:
 ```
 Error: <error>
 Date: <date of error>
@@ -62,7 +59,7 @@ Sensor schematic:
 <br>
 
 In addition, the system uses the following sensors:
-- MAX30102 - heart-rate and oxygen level
+- MAX30102 - heart rate and oxygen level
 - AD8232 - ECG
 - MAX30205 - body temperature
 
@@ -77,8 +74,7 @@ More circuit design images can be seen [here](/images/circuit-designs/).
 
 For the relational database management system, we choose PostgreSQL. In the database, we are storing information about the device and data capture.
 
-ER diagram can be seen from the following image:
-
+ER diagram can be seen in the following image:
 <div align="center">
   <img alt="ER diagram" src="images/er.png"/>
 </div>
@@ -98,12 +94,11 @@ ER diagram can be seen from the following image:
  <img alt="Postman" src="https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=red"/>
 </div>
 
-The API was made with a python framework **flask** with GraphQL and returns data in JSON format. The API is hosted on Heroku, and it's running inside a docker container. To make the API production-ready, we used the **gunicorn** server.
+The API was made with a python framework **flask** with GraphQL and returns data in JSON format. The API is hosted on Heroku and runs inside a docker container. To make the API production-ready, we used the **gunicorn** server.
 
-To prevent unauthorized access, we use API keys along with the HTTPS protocol - provided by Heroku.
+We use API keys along with the HTTPS protocol - provided by Heroku to prevent unauthorized access.
 
 Main method:
-
 ```python
 def valid():
     return False if request.headers.get('X-API-Key') != app.config["KEY"] else True
@@ -149,4 +144,4 @@ More images can be seen [here](/images/app/).
 
 # Further reading
 
-This project is a part of my thesis. Entire document is available [here](https://dk.um.si/IzpisGradiva.php?id=82004&lang=slv)
+This project is a part of my thesis. The entire document is available [here](https://dk.um.si/IzpisGradiva.php?id=82004&lang=slv).
