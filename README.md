@@ -16,7 +16,7 @@
 Healthcare system with Raspberry Pi, PostgreSQL, Docker, Flask, GraphQL, and Flutter.
 
 The project consists of 4 main components:
-- Capturing data from the sensors using Raspberry Pi
+- Data capture from the sensors using Raspberry Pi
 - Database for data storage
 - API for storing and retrieving data
 - Mobile app for displaying the values
@@ -131,7 +131,7 @@ def graphql_server():
 
 The mobile app was made with Flutter and Dart. The main app functionality is getting data from the API and displaying it.
 
-The app features the latest, average, median, standard deviation, all today's values along with maximum and minimum values. It also includes a graph with all today's values.
+The app features the latest, average, median, standard deviation, all today's values along with maximum and minimum values. It also includes a graph with all today's values. It can also download a PDF file with data for a given measurement.
 
 More images can be seen [here](/images/app/).
 
